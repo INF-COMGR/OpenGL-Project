@@ -11,53 +11,24 @@
 #include <QCursor>
 #include <QApplication>
 #include <QDesktopWidget>
+#include "cameraview.h"
 
 class ApplicationView : public QOpenGLWidget
 {
     Q_OBJECT
 public:
     ApplicationView(QWidget *parent=0);
-    void changeCam(float posX, float posY, float posZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ);
-    void mouseUpdate(const QVector2D& movedMouse2DVec);
 protected:
     void initializeGL ();
     void resizeGL ( int width, int height );
     void paintGL ();
 
-    void keyPressEvent(QKeyEvent * e);
+    void keyPressEvent(QKeyEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
 private:
-
-    int secondsPassed;
+    CameraView *cameraView;
     QTimer* timer;
-
-
-    //NAVIGATION
-    /*
-    camPosx = 10.0,  camPosy = 0.0, camPosz = 0.0;
-    camViewx = 0.0, camViewy = 0.0, camViewz = 0.0;
-    camUpx = 0.0,   camUpy = 1.0,   camUpz = 0.0;
-    */
-    QVector3D position = *new QVector3D(10, 0, 0);
-    QVector3D view = *new QVector3D(0, 0, 0);
-    QVector3D UP = *new QVector3D(0, 1, 0);
-    QVector2D currentMouse2DVec = *new QVector2D(0, 0);
-    void mouseMoveEvent(QMouseEvent*);
-    QVector3D getStrafeVector();
-
-    const float MOVEMENT_SPEED = 0.01f;
-    void goForward();
-    void goBackward();
-    void strafeLeft();
-    void strafeRight();
-    void goUp();
-    void goDown();
-
-    //MATERIAL
-    float globePos = 5.0f;
-    void moveGlobeDownLine();
-    void moveGlobeUpLine();
-
-    void movePlayer( QKeyEvent * e );
+    const int FPS_COUNT = 1000/120; //1 sec or 1000msec / 60FPS
 };
 
 #endif // APPLICATIONVIEW_H
