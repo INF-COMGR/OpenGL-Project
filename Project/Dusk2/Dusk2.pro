@@ -12,15 +12,23 @@ SOURCES += \
     camera.cpp \
     cameraview.cpp \
     main.cpp \
+    room.cpp \
+    roomview.cpp \
     shootapplication.cpp \
-    spaceview.cpp
+    spaceview.cpp \
+    wall.cpp \
+    wallview.cpp
 
 HEADERS += \
     camera.h \
     cameraview.h \
+    room.h \
+    roomview.h \
     shootapplication.h \
     spaceview.h \
-    util.h
+    util.h \
+    wall.h \
+    wallview.h
 
 FORMS += \
     shootapplication.ui
