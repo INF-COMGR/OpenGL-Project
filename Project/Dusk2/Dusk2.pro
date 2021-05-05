@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     camera.cpp \
     cameraview.cpp \
+    floor.cpp \
     main.cpp \
     room.cpp \
     roomview.cpp \
@@ -22,10 +23,12 @@ SOURCES += \
 HEADERS += \
     camera.h \
     cameraview.h \
+    floor.h \
     room.h \
     roomview.h \
     shootapplication.h \
     spaceview.h \
+    stb_image.h \
     util.h \
     wall.h \
     wallview.h
