@@ -1,6 +1,7 @@
 #include "spaceview.h"
 #include "util.h"
 #include "cameraview.h"
+#include "barrelview.h"
 
 SpaceView::SpaceView(QWidget *parent) : QOpenGLWidget(parent) {
     timer = new QTimer();
@@ -11,6 +12,8 @@ SpaceView::SpaceView(QWidget *parent) : QOpenGLWidget(parent) {
     this->cameraView = new CameraView;
     this->cameraView->changeCam(2, 2, 25, 0, 0, -1, 0, 1, 0);
     this->cameraView->toggleFreeCam();
+
+    this->barrelView = new BarrelView(2, QVector3D(2, 0 ,0));
 }
 
 /**
@@ -74,6 +77,7 @@ void SpaceView::paintGL () {
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix( );
         this->cameraView->Draw();
+        this->barrelView->draw();
     // restore current matrix
     glMatrixMode( GL_MODELVIEW );
     glPopMatrix( );
