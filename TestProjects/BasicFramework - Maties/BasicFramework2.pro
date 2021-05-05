@@ -11,13 +11,22 @@ CONFIG += c++11
 SOURCES += \
     application.cpp \
     applicationview.cpp \
+    barrel.cpp \
+    barrelview.cpp \
+    camera.cpp \
+    cameraview.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     application.h \
     applicationview.h \
+    barrel.h \
+    barrelview.h \
+    camera.h \
+    cameraview.h \
     mainwindow.h \
+    stb_image.h \
     util.h
 
 FORMS += \
