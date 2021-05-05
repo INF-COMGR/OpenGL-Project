@@ -11,8 +11,8 @@ RoomView::RoomView(double x1, double y1, double z1, double x2, double y2, double
 }
 
 void RoomView::Draw() {
-    this->wall1->Draw();
-    this->wall2->Draw();
-    this->wall3->Draw();
-    this->wall4->Draw();
+    this->wall1->draw();
+    this->wall2->draw();
+    this->wall3->draw();
+    this->wall4->draw();
 }

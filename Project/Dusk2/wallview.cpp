@@ -16,7 +16,7 @@ WallView::WallView(Wall* wall, float red, float green, float blue) {
     this->blue = blue;
 }
 
-void WallView::Draw() {
+void WallView::draw() {
     QVector<double> bottomLeft = *wall->getBottomLeft();
     double x1 = bottomLeft[0];
     double y1 = bottomLeft[1];
@@ -37,25 +37,52 @@ void WallView::Draw() {
     double y4 = topLeft[1];
     double z4 = topLeft[2];
 
-//    double texCoords[] = { x1, y1, z1, x3, y3, z3};
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-////    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-////    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    addTexture();
 
-
-    glBegin(GL_QUADS);
-    glColor4f(red/255.0f,
-              green/255.0f,
-              blue/255.0f,
+    glColor4f((blue)/255.0f,
+              (green)/255.0f,
+              (blue)/255.0f,
               1.0f);
-    glVertex3f(x1,y1,z1);
-    glVertex3f(x2,y2,z2);
-    glVertex3f(x3,y3,z3);
-    glVertex3f(x4,y4,z4);
+    glBegin(GL_QUADS);
+        glTexCoord2d( 0.0, 5.0 );
+        glVertex3f(x1,y1,z1);
+        glTexCoord2d( 0.0, 0.0 );
+        glVertex3f(x2,y2,z2);
+        glTexCoord2d( 5.0, 0.0 );
+        glVertex3f(x3,y3,z3);
+        glTexCoord2d( 5.0, 5.0 );
+        glVertex3f(x4,y4,z4);
     glEnd();
     glColor4f(1, 1, 1, 1);
+}
+
+void WallView::addTexture() {
+    unsigned int texture;
+    int width, height, nrChannels;
+
+    //TODO: LOOK FOR SOLUTION FOR ABSOLUTE PATH
+    unsigned char *image = stbi_load("/Users/runeteuwen/Documents/Universiteit/2e bachelor/Semester 2/COMGR/OpenGL1/ShootShoot/wall.jpg", &width, &height, &nrChannels, 0);
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    if (image != NULL) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    }
+    else {
+        QTextStream out(stdout);
+            out << stbi_failure_reason();
+    }
+    stbi_image_free(image);
+
+    // set the texture wrapping/filtering options (on the currently bound texture object)
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load and generate the texture
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+    // use our previously defined texture
+    glEnable( GL_TEXTURE_2D );
+    glBindTexture( GL_TEXTURE_2D , texture );
 }
 
