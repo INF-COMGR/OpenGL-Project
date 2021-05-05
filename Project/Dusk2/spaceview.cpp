@@ -1,6 +1,7 @@
 #include "spaceview.h"
 #include "util.h"
 #include "cameraview.h"
+#include "QKeyEvent"
 
 SpaceView::SpaceView(QWidget *parent) : QOpenGLWidget(parent) {
     timer = new QTimer();
@@ -81,6 +82,9 @@ void SpaceView::paintGL () {
 
 void SpaceView::keyPressEvent(QKeyEvent * e) {
     cameraView->keyPressedEvent(e);
+    if (e->key() == Qt::Key_T) {
+        cameraView->toggleFreeCam();
+    }
 }
 
 void SpaceView::mouseMoveEvent(QMouseEvent *e) {

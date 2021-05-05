@@ -7,7 +7,7 @@ CameraView::CameraView() {
     camera = new Camera();
 }
 
-void CameraView::Draw() {
+void CameraView::draw() {
     gluLookAt(camera->getPosX(), camera->getPosY(), camera->getPosZ(),
               camera->getViewX(), camera->getViewY(), camera->getViewZ(),
               camera->getUpX(), camera->getUpY(), camera->getUpZ());

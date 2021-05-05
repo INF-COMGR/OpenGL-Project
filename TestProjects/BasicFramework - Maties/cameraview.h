@@ -8,7 +8,7 @@ class CameraView
 {
 public:
     CameraView();
-    void Draw();
+    void draw();
     void keyPressedEvent(QKeyEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void toggleAxis();
