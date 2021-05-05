@@ -1,6 +1,8 @@
 #include "wallview.h"
 #include "util.h"
 #include <QTextStream>
+#include <QCoreApplication>
+#include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -65,7 +67,9 @@ void WallView::addTexture() {
     int width, height, nrChannels;
 
     //TODO: LOOK FOR SOLUTION FOR ABSOLUTE PATH
-    unsigned char *image = stbi_load("/Users/runeteuwen/Documents/Universiteit/2e bachelor/Semester 2/COMGR/OpenGL1/ShootShoot/wall.jpg", &width, &height, &nrChannels, 0);
+    QString path{QCoreApplication::applicationDirPath() + "/../../../../Dusk2/wall.jpg"};
+    std::cout << " " << path.toStdString() << " ";
+    unsigned char *image = stbi_load(path.toStdString().c_str(), &width, &height, &nrChannels, 0);
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 

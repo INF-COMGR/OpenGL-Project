@@ -42,7 +42,7 @@ void SpaceView::initializeGL () {
     glLightfv ( GL_LIGHT0, GL_POSITION, light0_position );
     glLightfv ( GL_LIGHT0, GL_DIFFUSE, light_diffuse );
 
-    timer->start(50);
+    timer->start(10);
 
 }
 
