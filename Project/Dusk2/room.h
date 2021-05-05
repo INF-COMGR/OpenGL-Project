@@ -1,6 +1,7 @@
 #ifndef ROOM_H
 #define ROOM_H
 #include "wall.h"
+#include "floor.h"
 
 class Room
 {
@@ -10,12 +11,14 @@ public:
     Wall* getWall2();
     Wall* getWall3();
     Wall* getWall4();
+    Floor* getFloor();
 
 private:
     Wall* wall1;
     Wall* wall2;
     Wall* wall3;
     Wall* wall4;
+    Floor* floor;
 };
 
 #endif // ROOM_H

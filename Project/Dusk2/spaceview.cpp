@@ -1,6 +1,7 @@
 #include "spaceview.h"
 #include "util.h"
 #include "cameraview.h"
+#include "roomview.h"
 
 SpaceView::SpaceView(QWidget *parent) : QOpenGLWidget(parent) {
     timer = new QTimer();
@@ -66,6 +67,7 @@ void SpaceView::resizeGL ( int width, int height ) {
 }
 
 void SpaceView::paintGL () {
+    RoomView *room = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
@@ -74,6 +76,9 @@ void SpaceView::paintGL () {
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix( );
         this->cameraView->Draw();
+        glPushMatrix();
+            room->draw();
+        glPopMatrix();
     // restore current matrix
     glMatrixMode( GL_MODELVIEW );
     glPopMatrix( );
