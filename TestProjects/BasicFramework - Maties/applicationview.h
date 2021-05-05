@@ -11,7 +11,8 @@
 #include <QCursor>
 #include <QApplication>
 #include <QDesktopWidget>
-#include "cameraview.h"
+class CameraView;
+class BarrelView;
 
 class ApplicationView : public QOpenGLWidget
 {
@@ -27,6 +28,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *e);
 private:
     CameraView *cameraView;
+    BarrelView *barrelView;
+    BarrelView *barrelView2;
     QTimer* timer;
     const int FPS_COUNT = 1000/120; //1 sec or 1000msec / 60FPS
 };

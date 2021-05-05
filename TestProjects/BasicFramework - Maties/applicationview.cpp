@@ -1,4 +1,6 @@
 #include "applicationview.h"
+#include "barrelview.h"
+#include "cameraview.h"
 
 ApplicationView::ApplicationView(QWidget *parent) : QOpenGLWidget(parent)
 {
@@ -9,7 +11,9 @@ ApplicationView::ApplicationView(QWidget *parent) : QOpenGLWidget(parent)
 
     cameraView = new CameraView;
     cameraView->changeCam(2, 2, 25, 0, 0, -1, 0, 1, 0);
-    cameraView->toggleFreeCam();
+
+    barrelView = new BarrelView(2, QVector3D(3, 0, 0));
+    barrelView2 = new BarrelView(2, QVector3D(-3, 0, 0));
 }
 
 void ApplicationView::initializeGL()
@@ -67,9 +71,11 @@ void ApplicationView::paintGL()
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix( );
 
-    cameraView->Draw();
+    cameraView->draw();
+    barrelView->draw();
+    barrelView2->draw();
 
-
+    /*
     Util::drawSolidSphere(3.0, 25, 25);
     Util::drawSolidCuboid({0, 3, 0}, {3, 0, 3});
 
@@ -83,8 +89,10 @@ void ApplicationView::paintGL()
         glVertex3f(5, 6, 5);
     glEnd();
 
+    */
     glMatrixMode( GL_MODELVIEW );
     glPopMatrix();
+
 
     //MATERIALS
     /*
@@ -139,4 +147,7 @@ void ApplicationView::mouseMoveEvent(QMouseEvent *e) {
 
 void ApplicationView::keyPressEvent( QKeyEvent * e ) {
     cameraView->keyPressedEvent(e);
+    if (e->key() == Qt::Key_T) {
+        cameraView->toggleFreeCam();
+    }
 }
