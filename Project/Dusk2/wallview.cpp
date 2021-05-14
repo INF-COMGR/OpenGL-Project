@@ -4,7 +4,6 @@
 #include <QCoreApplication>
 //#include <iostream>
 
-#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 WallView::WallView(double x1, double y1, double z1, double x2, double y2, double z2, float red, float green, float blue)
