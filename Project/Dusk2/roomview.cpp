@@ -13,12 +13,12 @@ RoomView::RoomView(double x1, double y1, double z1, double x2, double y2, double
     this->floor = new FloorView(room->getFloor(), red, green, blue);
 }
 
-void RoomView::draw() {
+void RoomView::draw(bool isWireframe) {
     glPushMatrix();
-        this->wall1->draw();
-        this->wall2->draw();
-        this->wall3->draw();
-        this->wall4->draw();
-        this->floor->draw();
+        this->wall1->draw(isWireframe);
+        this->wall2->draw(isWireframe);
+        this->wall3->draw(isWireframe);
+        this->wall4->draw(isWireframe);
+        this->floor->draw(isWireframe);
     glPopMatrix();
 }

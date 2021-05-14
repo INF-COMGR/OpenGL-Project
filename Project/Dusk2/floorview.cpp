@@ -1,7 +1,8 @@
 #include "floorview.h"
 #include "util.h"
-#include <QTextStream>
-
+//#include <QTextStream>
+#include <QCoreApplication>
+//#include <iostream>
 
 #include "stb_image.h"
 
@@ -19,7 +20,7 @@ FloorView::FloorView(Floor* floor, float red, float green, float blue) {
     this->blue = blue;
 }
 
-void FloorView::draw() {
+void FloorView::draw(bool isWireframe) {
     QVector<double> bottomLeft = *floor->getBottomLeft();
     double x1 = bottomLeft[0];
     double y1 = bottomLeft[1];
@@ -40,13 +41,14 @@ void FloorView::draw() {
     double y4 = topLeft[1];
     double z4 = topLeft[2];
 
-    addTexture();
+    if (!isWireframe)
+        addTexture();
 
     glColor4f((blue)/255.0f,
               (green)/255.0f,
               (blue)/255.0f,
               1.0f);
-    glBegin(GL_QUADS);
+    glBegin( !isWireframe ? GL_QUADS : GL_LINE_LOOP );
         glTexCoord2d( 0.0, 5.0 );
         glVertex3f(x1,y1,z1);
         glTexCoord2d( 0.0, 0.0 );
@@ -60,11 +62,13 @@ void FloorView::draw() {
 }
 
 void FloorView::addTexture() {
+
     unsigned int texture;
     int width, height, nrChannels;
 
-    //TODO: LOOK FOR SOLUTION FOR ABSOLUTE PATH
-    unsigned char *image = stbi_load("/Users/runeteuwen/Documents/Universiteit/2e bachelor/Semester 2/COMGR/OpenGL1/ShootShoot/grass.jpg", &width, &height, &nrChannels, 0);
+    QString path{QCoreApplication::applicationDirPath() + "/../../../../Dusk2/grass.jpg"};
+    //std::cout << " " << path.toStdString() << " ";
+    unsigned char *image = stbi_load(path.toStdString().c_str(), &width, &height, &nrChannels, 0);
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -72,8 +76,7 @@ void FloorView::addTexture() {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     }
     else {
-        QTextStream out(stdout);
-            out << stbi_failure_reason();
+        perror(stbi_failure_reason() );
     }
     stbi_image_free(image);
 

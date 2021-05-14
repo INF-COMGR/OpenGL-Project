@@ -1,8 +1,8 @@
 #include "wallview.h"
 #include "util.h"
-#include <QTextStream>
+//#include <QTextStream>
 #include <QCoreApplication>
-#include <iostream>
+//#include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -22,7 +22,7 @@ WallView::WallView(Wall* wall, float red, float green, float blue) {
     this->blue = blue;
 }
 
-void WallView::draw() {
+void WallView::draw(bool isWireframe) {
     QVector<double> bottomLeft = *wall->getBottomLeft();
     double x1 = bottomLeft[0];
     double y1 = bottomLeft[1];
@@ -43,20 +43,22 @@ void WallView::draw() {
     double y4 = topLeft[1];
     double z4 = topLeft[2];
 
-    addTexture();
+    if (!isWireframe)
+        addTexture();
 
     glColor4f((blue)/255.0f,
               (green)/255.0f,
               (blue)/255.0f,
               1.0f);
-    glBegin(GL_QUADS);
+    glBegin(!isWireframe ? GL_QUADS : GL_LINE_LOOP);
+        //glNormal3f(1.0, 1.0, 1.0);
         glTexCoord2d( 0.0, 5.0 );
         glVertex3f(x1,y1,z1);
         glTexCoord2d( 0.0, 0.0 );
         glVertex3f(x2,y2,z2);
-        glTexCoord2d( 5.0, 0.0 );
+        glTexCoord2d( 2.5, 0.0 );
         glVertex3f(x3,y3,z3);
-        glTexCoord2d( 5.0, 5.0 );
+        glTexCoord2d( 2.5, 5.0);
         glVertex3f(x4,y4,z4);
     glEnd();
     glColor4f(1, 1, 1, 1);
@@ -66,9 +68,8 @@ void WallView::addTexture() {
     unsigned int texture;
     int width, height, nrChannels;
 
-    //TODO: LOOK FOR SOLUTION FOR ABSOLUTE PATH
     QString path{QCoreApplication::applicationDirPath() + "/../../../../Dusk2/wall.jpg"};
-    std::cout << " " << path.toStdString() << " ";
+    //std::cout << " " << path.toStdString() << " ";
     unsigned char *image = stbi_load(path.toStdString().c_str(), &width, &height, &nrChannels, 0);
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -77,10 +78,10 @@ void WallView::addTexture() {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     }
     else {
-        QTextStream out(stdout);
-            out << stbi_failure_reason();
+        perror( stbi_failure_reason() );
     }
     stbi_image_free(image);
+
 
     // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -92,5 +93,6 @@ void WallView::addTexture() {
     // use our previously defined texture
     glEnable( GL_TEXTURE_2D );
     glBindTexture( GL_TEXTURE_2D , texture );
+
 }
 

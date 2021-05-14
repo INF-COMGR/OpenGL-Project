@@ -9,7 +9,7 @@ class RoomView
 {
 public:
     RoomView(double x1, double y1, double z1, double x2, double y2, double z2, float red, float green, float blue);
-    void draw();
+    void draw(bool isWireframe = false);
 private:
     Room* room;
     WallView* wall1;

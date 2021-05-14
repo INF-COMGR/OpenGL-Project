@@ -19,6 +19,8 @@ SOURCES += \
     room.cpp \
     roomview.cpp \
     shootapplication.cpp \
+    shotgun.cpp \
+    shotgunview.cpp \
     spaceview.cpp \
     wall.cpp \
     wallview.cpp
@@ -33,6 +35,8 @@ HEADERS += \
     room.h \
     roomview.h \
     shootapplication.h \
+    shotgun.h \
+    shotgunview.h \
     spaceview.h \
     stb_image.h \
     util.h \

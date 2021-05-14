@@ -4,6 +4,7 @@
 #include "barrelview.h"
 #include <QKeyEvent>
 #include "roomview.h"
+#include "shotgunview.h"
 
 #include "QKeyEvent"
 #include <QApplication>
@@ -20,7 +21,7 @@ SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) 
     setFocusPolicy(Qt::StrongFocus);
 
     this->cameraView = new CameraView;
-    this->barrelView = new BarrelView(1, QVector3D(2, 0 ,0));
+    this->barrelView = new BarrelView(1, QVector3D(2, 0 , 0));
     this->barrelView2 = new BarrelView(2, QVector3D(-2, 0, 0));
 
     this->isWireframe = isWireframe;
@@ -86,6 +87,7 @@ void SpaceView::resizeGL ( int width, int height ) {
 
 void SpaceView::paintGL () {
     RoomView *room = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
+    ShotgunView* shotgun = new ShotgunView();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
@@ -93,10 +95,10 @@ void SpaceView::paintGL () {
     // store current matrix
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix( );
+        shotgun->draw(isWireframe);
         this->cameraView->Draw();
         this->barrelView->draw(isWireframe);
-        room->draw();
-    // restore current matrix
+        room->draw(isWireframe);
     glPopMatrix( );
 }
 
