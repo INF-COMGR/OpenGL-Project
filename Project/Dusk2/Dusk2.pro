@@ -13,18 +13,31 @@ SOURCES += \
     barrelview.cpp \
     camera.cpp \
     cameraview.cpp \
+    floor.cpp \
+    floorview.cpp \
     main.cpp \
+    room.cpp \
+    roomview.cpp \
     shootapplication.cpp \
-    spaceview.cpp
+    spaceview.cpp \
+    wall.cpp \
+    wallview.cpp
 
 HEADERS += \
     barrel.h \
     barrelview.h \
     camera.h \
     cameraview.h \
+    floor.h \
+    floorview.h \
+    room.h \
+    roomview.h \
     shootapplication.h \
     spaceview.h \
-    util.h
+    stb_image.h \
+    util.h \
+    wall.h \
+    wallview.h
 
 FORMS += \
     shootapplication.ui

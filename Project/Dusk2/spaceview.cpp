@@ -4,7 +4,16 @@
 #include "barrelview.h"
 #include <QKeyEvent>
 
+<<<<<<< HEAD
 SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) {
+=======
+#include "roomview.h"
+
+#include "QKeyEvent"
+
+
+SpaceView::SpaceView(QWidget *parent) : QOpenGLWidget(parent) {
+>>>>>>> feature-room
     timer = new QTimer();
     connect( timer, SIGNAL(timeout()), this, SLOT(update()) );
 
@@ -44,7 +53,7 @@ void SpaceView::initializeGL () {
     glLightfv ( GL_LIGHT0, GL_POSITION, light0_position );
     glLightfv ( GL_LIGHT0, GL_DIFFUSE, light_diffuse );
 
-    timer->start(50);
+    timer->start(10);
 
 }
 
@@ -73,6 +82,7 @@ void SpaceView::resizeGL ( int width, int height ) {
 }
 
 void SpaceView::paintGL () {
+    RoomView *room = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
@@ -81,16 +91,28 @@ void SpaceView::paintGL () {
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix( );
         this->cameraView->Draw();
+<<<<<<< HEAD
         this->barrelView->draw(isWireframe);
+=======
+        glPushMatrix();
+            room->draw();
+        glPopMatrix();
+>>>>>>> feature-room
     // restore current matrix
     glPopMatrix( );
 }
 
 void SpaceView::keyPressEvent(QKeyEvent * e) {
     cameraView->keyPressedEvent(e);
+<<<<<<< HEAD
 
     if (e->key() == Qt::Key::Key_W)
         this->isWireframe = this->isWireframe ? false : true;
+=======
+    if (e->key() == Qt::Key_T) {
+        cameraView->toggleFreeCam();
+    }
+>>>>>>> feature-room
 }
 
 void SpaceView::mouseMoveEvent(QMouseEvent *e) {
