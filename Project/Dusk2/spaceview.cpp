@@ -91,6 +91,8 @@ void SpaceView::keyPressEvent(QKeyEvent * e) {
 
     if (e->key() == Qt::Key::Key_W)
         this->isWireframe = this->isWireframe ? false : true;
+    if (e->key() == Qt::Key::Key_F)
+        this->cameraView->toggleFreeCam();
 }
 
 void SpaceView::mouseMoveEvent(QMouseEvent *e) {

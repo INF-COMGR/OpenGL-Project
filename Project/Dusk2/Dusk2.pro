@@ -24,6 +24,7 @@ HEADERS += \
     cameraview.h \
     shootapplication.h \
     spaceview.h \
+    stb_image.h \
     util.h
 
 FORMS += \
