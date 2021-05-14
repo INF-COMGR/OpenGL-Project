@@ -8,7 +8,7 @@ BarrelView::BarrelView(int size, QVector3D location)
     barrel = new Barrel(size, location);
 }
 
-void BarrelView::draw()
+void BarrelView::draw(bool isWireframe)
 {
     glPushMatrix();
     int size = barrel->getSize();
@@ -19,7 +19,7 @@ void BarrelView::draw()
     glTranslated(location.x(), location.y(), location.z());
 
     glEnable( GL_LIGHTING );
-    glBegin(GL_POLYGON);
+    glBegin( !isWireframe ? GL_POLYGON : GL_LINE_LOOP);
         glVertex3d(0, 0, -2 * alpha);
         glVertex3d(beta, 0, -alpha);
         glVertex3d(beta, 0, alpha);
@@ -28,7 +28,7 @@ void BarrelView::draw()
         glVertex3d(-beta, 0, -alpha);
     glEnd();
 
-    glBegin(GL_QUAD_STRIP);
+    glBegin( !isWireframe ? GL_QUAD_STRIP : GL_LINE_LOOP );
         glVertex3d(0, 0, -2 * alpha);
         glVertex3d(0, size, -2 * alpha);
         glVertex3d(beta, 0, -alpha);
@@ -43,7 +43,7 @@ void BarrelView::draw()
         glVertex3d(-beta, size, -alpha);
     glEnd();
 
-    glBegin(GL_POLYGON);
+    glBegin( !isWireframe ? GL_POLYGON : GL_LINE_LOOP);
         glVertex3d(0, size, -2 * alpha);
         glVertex3d(beta, size, -alpha);
         glVertex3d(beta, size, alpha);

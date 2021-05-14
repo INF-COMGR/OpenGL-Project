@@ -11,7 +11,7 @@ private:
     void getTexture();
 public:
     BarrelView(int size, QVector3D location);
-    void draw();
+    void draw(bool isWireframe = false);
 };
 
 #endif // BARRELVIEW_H

@@ -43,7 +43,7 @@ void Camera::keyUpdate(QKeyEvent *e) {
 }
 
 void Camera::mouseUpdate(QVector2D *movedMouse2DVec) {
-    const float rotationSpeed = -0.1f;
+    const float rotationSpeed = -1.0f;
     QVector2D delta = *movedMouse2DVec - *currentMouse2DVec;
 
     //horizontal rotation
@@ -60,9 +60,11 @@ void Camera::mouseUpdate(QVector2D *movedMouse2DVec) {
     *view = *verticalRotationM * *view;
 
     //Resetting mouse to middlepoint
-    QRect rec = QApplication::desktop()->screenGeometry();
-    currentMouse2DVec = new QVector2D(rec.width()/2, rec.height()/2);
-    QCursor::setPos(rec.width()/2, rec.height()/2);
+    //QRect rec = QApplication::desktop()->screenGeometry();
+    //currentMouse2DVec = new QVector2D(rec.width()/2, rec.height()/2);
+    //QCursor::setPos(rec.width()/2, rec.height()/2);
+
+    *currentMouse2DVec = *movedMouse2DVec;
 }
 
 void Camera::freeCamEvent(QKeyEvent* e) {

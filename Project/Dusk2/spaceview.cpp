@@ -2,8 +2,9 @@
 #include "util.h"
 #include "cameraview.h"
 #include "barrelview.h"
+#include <QKeyEvent>
 
-SpaceView::SpaceView(QWidget *parent) : QOpenGLWidget(parent) {
+SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) {
     timer = new QTimer();
     connect( timer, SIGNAL(timeout()), this, SLOT(update()) );
 
@@ -13,7 +14,10 @@ SpaceView::SpaceView(QWidget *parent) : QOpenGLWidget(parent) {
     this->cameraView->changeCam(2, 2, 25, 0, 0, -1, 0, 1, 0);
     this->cameraView->toggleFreeCam();
 
-    this->barrelView = new BarrelView(2, QVector3D(2, 0 ,0));
+    this->barrelView = new BarrelView(1, QVector3D(2, 0 ,0));
+    this->barrelView2 = new BarrelView(2, QVector3D(-2, 0, 0));
+
+    this->isWireframe = isWireframe;
 }
 
 /**
@@ -77,14 +81,16 @@ void SpaceView::paintGL () {
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix( );
         this->cameraView->Draw();
-        this->barrelView->draw();
+        this->barrelView->draw(isWireframe);
     // restore current matrix
-    glMatrixMode( GL_MODELVIEW );
     glPopMatrix( );
 }
 
 void SpaceView::keyPressEvent(QKeyEvent * e) {
     cameraView->keyPressedEvent(e);
+
+    if (e->key() == Qt::Key::Key_W)
+        this->isWireframe = this->isWireframe ? false : true;
 }
 
 void SpaceView::mouseMoveEvent(QMouseEvent *e) {
