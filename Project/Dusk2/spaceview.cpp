@@ -45,7 +45,7 @@ void SpaceView::initializeGL () {
     glLightfv ( GL_LIGHT0, GL_POSITION, light0_position );
     glLightfv ( GL_LIGHT0, GL_DIFFUSE, light_diffuse );
 
-    timer->start(50);
+    timer->start(10);
     QRect rec = QApplication::desktop()->screenGeometry();
     QCursor::setPos(rec.width()/2, rec.height()/2);
 
