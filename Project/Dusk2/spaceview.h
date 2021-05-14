@@ -2,8 +2,10 @@
 #define SPACEVIEW_H
 #include <QTimer>
 #include <QOpenGLWidget>
+class ShotgunView;
 class CameraView;
 class BarrelView;
+class RoomView;
 
 class SpaceView: public QOpenGLWidget {
 public:
@@ -19,6 +21,8 @@ private:
     CameraView* cameraView;
     BarrelView* barrelView;
     BarrelView* barrelView2;
+    ShotgunView* shotgunView;
+    RoomView* roomView;
     void keyPressEvent(QKeyEvent * e);
     void mouseMoveEvent(QMouseEvent* e);
     const int FPS_COUNT = 1000/120; //1 sec or 1000msec / 120FPS

@@ -13,6 +13,7 @@ WallView::WallView(double x1, double y1, double z1, double x2, double y2, double
     this->red = red;
     this->green = green;
     this->blue = blue;
+    initTextures();
 }
 
 WallView::WallView(Wall* wall, float red, float green, float blue) {
@@ -20,6 +21,7 @@ WallView::WallView(Wall* wall, float red, float green, float blue) {
     this->red = red;
     this->green = green;
     this->blue = blue;
+    initTextures();
 }
 
 void WallView::draw(bool isWireframe) {
@@ -64,13 +66,10 @@ void WallView::draw(bool isWireframe) {
     glColor4f(1, 1, 1, 1);
 }
 
-void WallView::addTexture() {
-    unsigned int texture;
-    int width, height, nrChannels;
-
+void WallView::initTextures() {
     QString path{QCoreApplication::applicationDirPath() + "/../../../../Dusk2/wall.jpg"};
     //std::cout << " " << path.toStdString() << " ";
-    unsigned char *image = stbi_load(path.toStdString().c_str(), &width, &height, &nrChannels, 0);
+    image = stbi_load(path.toStdString().c_str(), &width, &height, &nrChannels, 0);
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -80,8 +79,7 @@ void WallView::addTexture() {
     else {
         perror( stbi_failure_reason() );
     }
-    stbi_image_free(image);
-
+    //stbi_image_free(image);
 
     // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -91,6 +89,9 @@ void WallView::addTexture() {
     // load and generate the texture
     glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
     // use our previously defined texture
+}
+
+void WallView::addTexture() {
     glEnable( GL_TEXTURE_2D );
     glBindTexture( GL_TEXTURE_2D , texture );
 

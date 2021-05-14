@@ -59,6 +59,9 @@ void SpaceView::initializeGL () {
     QRect rec = QApplication::desktop()->screenGeometry();
     QCursor::setPos(rec.width()/2, rec.height()/2);
 
+    this->roomView = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
+    this->shotgunView = new ShotgunView();
+
 }
 
 /**
@@ -86,8 +89,6 @@ void SpaceView::resizeGL ( int width, int height ) {
 }
 
 void SpaceView::paintGL () {
-    RoomView *room = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
-    ShotgunView* shotgun = new ShotgunView();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
@@ -95,10 +96,10 @@ void SpaceView::paintGL () {
     // store current matrix
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix( );
-        shotgun->draw(isWireframe);
+        this->shotgunView->draw(isWireframe);
         this->cameraView->Draw();
         this->barrelView->draw(isWireframe);
-        room->draw(isWireframe);
+        this->roomView->draw(isWireframe);
     glPopMatrix( );
 }
 

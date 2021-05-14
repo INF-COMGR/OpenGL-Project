@@ -9,7 +9,12 @@ public:
     WallView(Wall* wall, float red, float green, float blue);
     void draw(bool isWireframe = false);
 private:
+    void initTextures();
+    unsigned int texture;
+    int width, height, nrChannels;
+    unsigned char* image;
     void addTexture();
+
     Wall* wall;
     float red, green, blue;
 };
