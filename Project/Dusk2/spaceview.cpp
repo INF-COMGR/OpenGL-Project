@@ -3,30 +3,31 @@
 #include "cameraview.h"
 #include "barrelview.h"
 #include <QKeyEvent>
-
-<<<<<<< HEAD
-SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) {
-=======
 #include "roomview.h"
 
 #include "QKeyEvent"
+#include <QApplication>
+#include <QCursor>
+#include <QDesktopWidget>
 
 
-SpaceView::SpaceView(QWidget *parent) : QOpenGLWidget(parent) {
->>>>>>> feature-room
+SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) {
+
+
     timer = new QTimer();
     connect( timer, SIGNAL(timeout()), this, SLOT(update()) );
 
     setFocusPolicy(Qt::StrongFocus);
 
     this->cameraView = new CameraView;
-    this->cameraView->changeCam(2, 2, 25, 0, 0, -1, 0, 1, 0);
-    this->cameraView->toggleFreeCam();
-
     this->barrelView = new BarrelView(1, QVector3D(2, 0 ,0));
     this->barrelView2 = new BarrelView(2, QVector3D(-2, 0, 0));
 
     this->isWireframe = isWireframe;
+
+    this->cameraView = new CameraView();
+    //this->cameraView->changeCam(2, 2, 25, 0, 0, -1, 0, 1, 0);
+    //this->cameraView->toggleFreeCam();
 }
 
 /**
@@ -54,6 +55,8 @@ void SpaceView::initializeGL () {
     glLightfv ( GL_LIGHT0, GL_DIFFUSE, light_diffuse );
 
     timer->start(10);
+    QRect rec = QApplication::desktop()->screenGeometry();
+    QCursor::setPos(rec.width()/2, rec.height()/2);
 
 }
 
@@ -91,31 +94,19 @@ void SpaceView::paintGL () {
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix( );
         this->cameraView->Draw();
-<<<<<<< HEAD
         this->barrelView->draw(isWireframe);
-=======
-        glPushMatrix();
-            room->draw();
-        glPopMatrix();
->>>>>>> feature-room
+        room->draw();
     // restore current matrix
     glPopMatrix( );
 }
 
 void SpaceView::keyPressEvent(QKeyEvent * e) {
-    cameraView->keyPressedEvent(e);
-<<<<<<< HEAD
-
     if (e->key() == Qt::Key::Key_W)
         this->isWireframe = this->isWireframe ? false : true;
-=======
-    if (e->key() == Qt::Key_T) {
-        cameraView->toggleFreeCam();
-    }
->>>>>>> feature-room
+    cameraView->keyPressEvent(e);
 }
 
 void SpaceView::mouseMoveEvent(QMouseEvent *e) {
-    cameraView->mouseMoveEvent(e);
+    cameraView->mouseMouveEvent(e);
 }
 

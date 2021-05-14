@@ -1,247 +1,144 @@
 #include "camera.h"
-#include <QVector2D>
 #include <QVector3D>
-#include <QKeyEvent>
 #include <QMatrix4x4>
 #include <QApplication>
 #include <QCursor>
 #include <QDesktopWidget>
 
-Camera::Camera() {
-    position = new QVector3D(10, 0, 0);
-    view = new QVector3D(0, 0, 0);
-    UP = new QVector3D(0, 1, 0);
-    currentMouse2DVec = new QVector2D(0, 0);
-}
-
-void Camera::changeCam(float posX, float posY, float posZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ)
+Camera::Camera()
 {
-    position->setX(posX);
-    position->setY(posY);
-    position->setZ(posZ);
+    camPosx = 3.0f,  camPosy = cameraHeight,    camPosz = 25.0f;
+    camViewx = 0.0f, camViewy = 0.0f, camViewz = -1.0f;
+    camUpx = 0.0f,   camUpy = 1.0f,   camUpz = 0.0f;
 
-    view->setX(lookAtX);
-    view->setY(lookAtY);
-    view->setZ(lookAtZ);
-
-    *view += *position;
-
-    UP->setX(upX);
-    UP->setY(upY);
-    UP->setZ(upZ);
+    flying = false;
 }
 
-QVector3D Camera::getStrafeVector() {
-    return QVector3D::crossProduct(*view, *UP);         //get StrafeVector
+void Camera::mouseUpdate(const QVector2D& newMousePosition) {
+    QVector2D mouseDelta = newMousePosition - oldMousePosition;
+
+    QMatrix4x4 horizontalMatrix;
+    QVector3D viewDirection = {camViewx, camViewy, camViewz};
+
+    horizontalMatrix.rotate(-mouseDelta.x(), camUpx, camUpy, camUpz);
+
+    viewDirection = horizontalMatrix * viewDirection;
+
+    camViewx = viewDirection.x();
+    camViewy = viewDirection.y();
+    camViewz = viewDirection.z();
+
+    QMatrix4x4 verticalMatrix;
+    QVector3D strafe = getStrafe();
+
+    verticalMatrix.rotate(-mouseDelta.y(), strafe);    //rotate around Strafe Vector
+    viewDirection = verticalMatrix * viewDirection;
+
+    camViewx = viewDirection.x();
+    camViewy = viewDirection.y();
+    camViewz = viewDirection.z();
+
+    QRect rec = QApplication::desktop()->screenGeometry();
+    oldMousePosition = {(float)rec.width()/2, (float)rec.height()/2};
+    QCursor::setPos(rec.width()/2, rec.height()/2);
 }
 
-void Camera::keyUpdate(QKeyEvent *e) {
-    if (isFreeCam)
-        freeCamEvent(e);
-    else
-        walkCamEvent(e);
+QVector3D Camera::getStrafe() {
+    QVector3D View = {camViewx, camViewy, camViewz};
+    QVector3D UP = {camUpx, camUpy, camUpz};
+    return (QVector3D::crossProduct(View, UP));
 }
 
-void Camera::mouseUpdate(QVector2D *movedMouse2DVec) {
-    const float rotationSpeed = -1.0f;
-    QVector2D delta = *movedMouse2DVec - *currentMouse2DVec;
 
-    //horizontal rotation
-    QMatrix4x4* horizontalRotationM = new QMatrix4x4();
-    horizontalRotationM->setToIdentity();
-    horizontalRotationM->rotate(delta.x()*rotationSpeed, *UP);            //rotate around UP Vector
-    *view = *horizontalRotationM * *view;
-
-    //vertical rotation
-    QMatrix4x4 *verticalRotationM = new QMatrix4x4();
-    verticalRotationM->setToIdentity();
-    QVector3D StrafeVector = getStrafeVector();
-    verticalRotationM->rotate(delta.y()*rotationSpeed, StrafeVector);    //rotate around Strafe Vector
-    *view = *verticalRotationM * *view;
-
-    //Resetting mouse to middlepoint
-    //QRect rec = QApplication::desktop()->screenGeometry();
-    //currentMouse2DVec = new QVector2D(rec.width()/2, rec.height()/2);
-    //QCursor::setPos(rec.width()/2, rec.height()/2);
-
-    *currentMouse2DVec = *movedMouse2DVec;
-}
-
-void Camera::freeCamEvent(QKeyEvent* e) {
-    switch(e->key()) {
-    case Qt::Key::Key_Z:
-        goForward();
-        break;
-    case Qt::Key::Key_S:
-        goBackward();
-        break;
-    case Qt::Key::Key_Q:
-        strafeLeft();
-        break;
-    case Qt::Key::Key_D:
-        strafeRight();
-        break;
-    case Qt::Key::Key_A:
-        goDown();
-        break;
-    case Qt::Key::Key_E:
-        goUp();
-        break;
-    case Qt::Key::Key_O:
-        moveGlobeDownLine();
-        break;
-    case Qt::Key::Key_L:
-        moveGlobeUpLine();
-        break;
-    }
-}
-
-void Camera::walkCamEvent(QKeyEvent *e) {
-    switch(e->key()) {
-    case Qt::Key::Key_Z:
-        walkForward();
-        break;
-    case Qt::Key::Key_S:
-        walkBackward();
-        break;
-    case Qt::Key::Key_Q:
-        walkLeft();
-        break;
-    case Qt::Key::Key_D:
-        walkRight();
-        break;
-    }
-}
-
-void Camera::moveGlobeUpLine() {
-    globePos++;
-}
-
-void Camera::moveGlobeDownLine() {
-    globePos--;
-}
-
-//Flying
-void Camera::toggleFreeCam() {
-    isFreeCam = isFreeCam ? false : true;
-}
-
-void Camera::goForward() {
-    *position += MOVEMENT_SPEED * *view;
-}
-void Camera::goBackward() {
-    *position += -MOVEMENT_SPEED * *view;
-}
-void Camera::strafeLeft() {
-    QVector3D StrafeVector = getStrafeVector();
-    *position += -MOVEMENT_SPEED * StrafeVector;
-}
-void Camera::strafeRight() {
-    QVector3D StrafeVector = getStrafeVector();
-    *position += MOVEMENT_SPEED * StrafeVector;
-}
-void Camera::goUp() {
-    *position += MOVEMENT_SPEED*5 * *UP;
-}
-void Camera::goDown() {
-    *position += -MOVEMENT_SPEED*5 * *UP;
-}
-
-//Walking
 void Camera::walkForward() {
-    *position += MOVEMENT_SPEED * *view;
-    position->setY(CAMERA_HEIGHT);
+    camPosx += speed * camViewx;
+    camPosy = cameraHeight;
+    camPosz += speed * camViewz;
+}
 
-}
 void Camera::walkBackward() {
-    *position += -MOVEMENT_SPEED * *view;
-    position->setY(CAMERA_HEIGHT);
+    camPosx += -speed * camViewx;
+    camPosy = cameraHeight;
+    camPosz += -speed * camViewz;
 }
+
 void Camera::walkLeft() {
-    QVector3D StrafeVector = getStrafeVector();
-    *position += -MOVEMENT_SPEED * StrafeVector;
-    position->setY(CAMERA_HEIGHT);
+    QVector3D strafe = getStrafe();
+    camPosx += -speed * strafe.x();
+    camPosy = cameraHeight;
+    camPosz += -speed * strafe.z();
+
 }
 void Camera::walkRight() {
-    QVector3D StrafeVector = getStrafeVector();
-    *position += MOVEMENT_SPEED * StrafeVector;
-    position->setY(CAMERA_HEIGHT);
+    QVector3D strafe = getStrafe();
+    camPosx += speed * strafe.x();
+    camPosy = cameraHeight;
+    camPosz += speed * strafe.z();
+
 }
 
-void Camera::addPosX(double i) {
-    position->setX(position->x()+i);
+void Camera::flyForward() {
+    camPosx += speed * camViewx;
+    camPosy += speed * camViewy;
+    camPosz += speed * camViewz;
 }
 
-void Camera::addPosY(double i) {
-    position->setY(position->y()+i);
+void Camera::flyBackward() {
+    camPosx += -speed * camViewx;
+    camPosy += -speed * camViewy;
+    camPosz += -speed * camViewz;
 }
 
-void Camera::addPosZ(double i) {
-    position->setZ(position->z()+i);
+void Camera::flyLeft() {
+    QVector3D strafe = getStrafe();
+    camPosx += -speed * strafe.x();
+    camPosy += speed * strafe.y();
+    camPosz += -speed * strafe.z();
+
+}
+void Camera::flyRight() {
+    QVector3D strafe = getStrafe();
+    camPosx += speed * strafe.x();
+    camPosy += speed * strafe.y();
+    camPosz += speed * strafe.z();
+
 }
 
-void Camera::addViewX(double i) {
-    view->setX(view->x()+i);
+bool Camera::isFlying() {
+    return flying;
 }
 
-void Camera::addViewY(double i) {
-    view->setY(view->y()+i);
-}
-
-void Camera::addViewZ(double i) {
-    view->setZ(view->z()+i);
-}
-
-void Camera::addUpX(double i) {
-    UP->setX(UP->x()+i);
-}
-void Camera::addUpY(double i) {
-    UP->setY(UP->y()+i);
-}
-void Camera::addUpZ(double i) {
-    UP->setZ(UP->z()+i);
+void Camera::toggleFlying() {
+    flying = !flying;
 }
 
 double Camera::getPosX() {
-    return position->x();
+    return camPosx;
 }
 double Camera::getPosY() {
-    return position->y();
+    return camPosy;
 }
 double Camera::getPosZ() {
-    return position->z();
+    return camPosz;
 }
 double Camera::getViewX() {
-    return view->x();
+    return camViewx;
 }
 double Camera::getViewY() {
-    return view->y();
+    return camViewy;
 }
 double Camera::getViewZ() {
-    return view->z();
+    return camViewz;
 }
 double Camera::getUpX() {
-    return UP->x();
+    return camUpx;
 }
 double Camera::getUpY() {
-    return UP->y();
+    return camUpy;
 }
 double Camera::getUpZ() {
-    return UP->z();
+    return camUpz;
 }
 
-void Camera::changePos(double x, double y, double z) {
-    position->setX(x);
-    position->setY(y);
-    position->setZ(z);
-}
-void Camera::changeView(double x, double y, double z) {
-    view->setX(x);
-    view->setY(y);
-    view->setZ(z);
-}
-void Camera::changeUp(double x, double y, double z) {
-    UP->setX(x);
-    UP->setY(y);
-    UP->setZ(z);
-}
+
+
