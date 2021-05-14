@@ -5,6 +5,9 @@
 #include "roomview.h"
 
 #include "QKeyEvent"
+#include <QApplication>
+#include <QCursor>
+#include <QDesktopWidget>
 
 
 SpaceView::SpaceView(QWidget *parent) : QOpenGLWidget(parent) {
@@ -13,9 +16,9 @@ SpaceView::SpaceView(QWidget *parent) : QOpenGLWidget(parent) {
 
     setFocusPolicy(Qt::StrongFocus);
 
-    this->cameraView = new CameraView;
-    this->cameraView->changeCam(2, 2, 25, 0, 0, -1, 0, 1, 0);
-    this->cameraView->toggleFreeCam();
+    this->cameraView = new CameraView();
+    //this->cameraView->changeCam(2, 2, 25, 0, 0, -1, 0, 1, 0);
+    //this->cameraView->toggleFreeCam();
 }
 
 /**
@@ -43,6 +46,8 @@ void SpaceView::initializeGL () {
     glLightfv ( GL_LIGHT0, GL_DIFFUSE, light_diffuse );
 
     timer->start(50);
+    QRect rec = QApplication::desktop()->screenGeometry();
+    QCursor::setPos(rec.width()/2, rec.height()/2);
 
 }
 
@@ -89,13 +94,13 @@ void SpaceView::paintGL () {
 }
 
 void SpaceView::keyPressEvent(QKeyEvent * e) {
-    cameraView->keyPressedEvent(e);
-    if (e->key() == Qt::Key_T) {
-        cameraView->toggleFreeCam();
-    }
+    cameraView->keyPressEvent(e);
+//    if (e->key() == Qt::Key_T) {
+//        cameraView->toggleFreeCam();
+//    }
 }
 
 void SpaceView::mouseMoveEvent(QMouseEvent *e) {
-    cameraView->mouseMoveEvent(e);
+    cameraView->mouseMouveEvent(e);
 }
 

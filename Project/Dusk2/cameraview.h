@@ -1,22 +1,21 @@
 #ifndef CAMERAVIEW_H
 #define CAMERAVIEW_H
-class QKeyEvent;
-class QMouseEvent;
-class Camera;
 
-class CameraView
-{
+// include files for QT
+#include <QOpenGLWidget>
+#include <QKeyEvent>
+#include <QMouseEvent>
+#include "camera.h"
+
+class CameraView {
 public:
     CameraView();
     void Draw();
-    void keyPressedEvent(QKeyEvent *e);
-    void mouseMoveEvent(QMouseEvent *e);
-    void toggleAxis();
-    void changeCam(float posX, float posY, float posZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ);
-    void toggleFreeCam();
+    void keyPressEvent(QKeyEvent * e);
+    void mouseMouveEvent(QMouseEvent* e);
 private:
     Camera *camera;
-    bool axisEnabled = true;
+
 };
 
 #endif // CAMERAVIEW_H

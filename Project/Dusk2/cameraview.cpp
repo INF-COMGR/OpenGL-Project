@@ -1,17 +1,17 @@
 #include "cameraview.h"
 #include "util.h"
-#include "camera.h"
-#include <QMouseEvent>
-
-CameraView::CameraView() {
+#include <QVector2D>
+CameraView::CameraView()  {
     camera = new Camera();
 }
 
 void CameraView::Draw() {
-    gluLookAt(camera->getPosX(), camera->getPosY(), camera->getPosZ(),
-              camera->getViewX(), camera->getViewY(), camera->getViewZ(),
-              camera->getUpX(), camera->getUpY(), camera->getUpZ());
-    if (axisEnabled) {
+    gluLookAt( camera->getPosX(), camera->getPosY(), camera->getPosZ(),
+               camera->getPosX() + camera->getViewX(),  camera->getPosY() + camera->getViewY(), camera->getPosZ() + camera->getViewZ(),
+               camera->getUpX(), camera->getUpY(), camera->getUpZ()
+                );
+
+    //Draw Axes
     glDisable( GL_LIGHTING );
     glBegin(GL_LINES);
         glColor3f(1.0, 0.0, 0.0);
@@ -25,26 +25,42 @@ void CameraView::Draw() {
         glVertex3f(0.0, 0.0, 10.0);
     glEnd();
     glEnable( GL_LIGHTING );
-    glEnable(GL_COLOR_MATERIAL);
+}
+
+void CameraView::keyPressEvent(QKeyEvent * e) {
+    if (e->key() == Qt::Key_F)
+        camera->toggleFlying();
+
+    if (!camera->isFlying()) {
+        if(e->key() == Qt::Key_Z)
+            camera->walkForward();
+
+        if(e->key() == Qt::Key_S)
+            camera->walkBackward();
+
+        if(e->key() == Qt::Key_Q)
+            camera->walkLeft();
+
+        if(e->key() == Qt::Key_D)
+            camera->walkRight();
     }
+    else {
+        if(e->key() == Qt::Key_Z)
+            camera->flyForward();
+
+        if(e->key() == Qt::Key_S)
+            camera->flyBackward();
+
+        if(e->key() == Qt::Key_Q)
+            camera->flyLeft();
+
+        if(e->key() == Qt::Key_D)
+            camera->flyRight();
+    }
+
 }
 
-void CameraView::changeCam(float posX, float posY, float posZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ) {
-    camera->changeCam(posX, posY, posZ, lookAtX, lookAtY, lookAtZ, upX, upY, upZ);
-}
-
-void CameraView::toggleFreeCam() {
-    camera->toggleFreeCam();
-}
-
-void CameraView::keyPressedEvent(QKeyEvent *e) {
-    camera->keyUpdate(e);
-}
-
-void CameraView::mouseMoveEvent(QMouseEvent *e) {
-    camera->mouseUpdate(new QVector2D(e->x(), e->y()));
-}
-
-void CameraView::toggleAxis() {
-    axisEnabled = axisEnabled ? false : true;
+void CameraView::mouseMouveEvent(QMouseEvent* e) {
+    QVector2D mouse = {(float) e->x(), (float) e->y()};
+    camera->mouseUpdate(mouse);
 }
