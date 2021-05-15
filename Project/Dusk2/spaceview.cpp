@@ -6,6 +6,7 @@
 #include "roomview.h"
 #include "shotgunview.h"
 #include "bulletview.h"
+#include "hitbox.h"
 
 #include "QKeyEvent"
 #include <QApplication>
@@ -58,9 +59,12 @@ void SpaceView::initializeGL () {
     //Init models with textures & logic
     this->roomView = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
     this->shotgunView = new ShotgunView();
-    this->barrelView = new BarrelView(1, QVector3D(2, 10, 2));
-    this->barrelView2 = new BarrelView(2, QVector3D(-2, 0, 0));
+    this->barrelView = new BarrelView(1, QVector3D(2, 7, 2));
+    this->barrelView2 = new BarrelView(2, QVector3D(2, 4, 2));
     this->barrelView->setFalling();
+    this->barrelView2->setFalling();
+    this->barrelView->addHitBox(barrelView2->getHitBox());
+    this->barrelView2->addHitBox(barrelView->getHitBox());
 }
 
 /**
@@ -98,6 +102,7 @@ void SpaceView::paintGL () {
         this->shotgunView->draw(isWireframe);
         this->cameraView->Draw();
         this->barrelView->draw(isWireframe);
+        this->barrelView2->draw(isWireframe);
         this->roomView->draw(isWireframe);
         if (bulletView != nullptr)
             bulletView->draw(isWireframe);
@@ -117,5 +122,11 @@ void SpaceView::mouseMoveEvent(QMouseEvent *e) {
 
 void SpaceView::mousePressEvent(QMouseEvent *e) {
     this->bulletView = new BulletView(cameraView->getCameraLocation(), cameraView->getCameraLookingDirection());
+    QVector<HitBox*> roomHitboxes = roomView->getHitBoxes();
+    for (int i = 0; i < roomHitboxes.length(); ++i) {
+        this->bulletView->addHitBox(roomHitboxes[i]);
+    }
+    this->bulletView->addHitBox(barrelView->getHitBox());
+    this->bulletView->addHitBox(barrelView2->getHitBox());
 }
 

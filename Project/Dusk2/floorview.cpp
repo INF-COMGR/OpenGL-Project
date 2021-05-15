@@ -5,6 +5,7 @@
 //#include <iostream>
 
 #include "stb_image.h"
+#include "hitbox.h"
 
 FloorView::FloorView(double x1, double z1, double x2, double z2, float red, float green, float blue) {
     this->floor = new Floor(x1, z1, x2, z2);
@@ -92,3 +93,6 @@ void FloorView::addTexture() {
     glBindTexture(GL_TEXTURE_2D, texture);
 }
 
+HitBox* FloorView::getHitBox() {
+    return floor->getHitBox();
+}

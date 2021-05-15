@@ -3,6 +3,7 @@
 
 #include <QVector3D>
 class Barrel;
+class HitBox;
 
 class BarrelView
 {
@@ -19,9 +20,11 @@ private:
     unsigned char* imageTop;
 
 public:
+    HitBox* getHitBox();
     BarrelView(int size, QVector3D location);
     void setFalling();
     void draw(bool isWireframe = false);
+    void addHitBox(HitBox* hitbox);
 };
 
 #endif // BARRELVIEW_H

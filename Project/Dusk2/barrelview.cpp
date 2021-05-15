@@ -5,6 +5,7 @@
 #include <QTextStream>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "hitbox.h"
 
 BarrelView::BarrelView(int size, QVector3D location)
 {
@@ -12,8 +13,16 @@ BarrelView::BarrelView(int size, QVector3D location)
     initTextures();
 }
 
+HitBox* BarrelView::getHitBox() {
+    return barrel->getHitBox();
+}
+
 void BarrelView::setFalling() {
     barrel->setFalling();
+}
+
+void BarrelView::addHitBox(HitBox* hitbox) {
+    barrel->addHitBox(hitbox);
 }
 
 void BarrelView::draw(bool isWireframe)

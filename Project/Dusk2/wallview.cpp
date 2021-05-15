@@ -3,19 +3,19 @@
 //#include <QTextStream>
 #include <QCoreApplication>
 //#include <iostream>
-
+#include "hitbox.h"
 #include "stb_image.h"
 
-WallView::WallView(double x1, double y1, double z1, double x2, double y2, double z2, float red, float green, float blue)
+WallView::WallView(double x1, double y1, double z1, double x2, double y2, double z2, float red, float green, float blue, DIRECTION direction)
 {
-    this->wall = new Wall(x1, y1, z1, x2, y2, z2);
+    this->wall = new Wall(x1, y1, z1, x2, y2, z2, direction);
     this->red = red;
     this->green = green;
     this->blue = blue;
     initTextures();
 }
 
-WallView::WallView(Wall* wall, float red, float green, float blue) {
+WallView::WallView(Wall* wall, float red, float green, float blue, DIRECTION direction) {
     this->wall = wall;
     this->red = red;
     this->green = green;
@@ -93,6 +93,9 @@ void WallView::initTextures() {
 void WallView::addTexture() {
     glEnable( GL_TEXTURE_2D );
     glBindTexture( GL_TEXTURE_2D , texture );
+}
 
+HitBox* WallView::getHitBox() {
+    return wall->getHitBox();
 }
 
