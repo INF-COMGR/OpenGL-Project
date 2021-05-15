@@ -121,6 +121,9 @@ double Camera::getPosY() {
 double Camera::getPosZ() {
     return camPosz;
 }
+QVector3D Camera::getLocation() {
+    return QVector3D(camPosx, camPosy, camPosz);
+}
 double Camera::getViewX() {
     return camViewx;
 }
@@ -129,6 +132,9 @@ double Camera::getViewY() {
 }
 double Camera::getViewZ() {
     return camViewz;
+}
+QVector3D Camera::getViewVector() {
+    return QVector3D(camViewx, camViewy, camViewz);
 }
 double Camera::getUpX() {
     return camUpx;

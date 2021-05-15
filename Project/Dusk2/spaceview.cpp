@@ -5,6 +5,7 @@
 #include <QKeyEvent>
 #include "roomview.h"
 #include "shotgunview.h"
+#include "bulletview.h"
 
 #include "QKeyEvent"
 #include <QApplication>
@@ -57,8 +58,9 @@ void SpaceView::initializeGL () {
     //Init models with textures & logic
     this->roomView = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
     this->shotgunView = new ShotgunView();
-    this->barrelView = new BarrelView(1, QVector3D(2, 0, 2));
+    this->barrelView = new BarrelView(1, QVector3D(2, 10, 2));
     this->barrelView2 = new BarrelView(2, QVector3D(-2, 0, 0));
+    this->barrelView->setFalling();
 }
 
 /**
@@ -97,6 +99,8 @@ void SpaceView::paintGL () {
         this->cameraView->Draw();
         this->barrelView->draw(isWireframe);
         this->roomView->draw(isWireframe);
+        if (bulletView != nullptr)
+            bulletView->draw(isWireframe);
     glPopMatrix( );
 }
 
@@ -109,5 +113,9 @@ void SpaceView::keyPressEvent(QKeyEvent * e) {
 
 void SpaceView::mouseMoveEvent(QMouseEvent *e) {
     cameraView->mouseMouveEvent(e);
+}
+
+void SpaceView::mousePressEvent(QMouseEvent *e) {
+    this->bulletView = new BulletView(cameraView->getCameraLocation(), cameraView->getCameraLookingDirection());
 }
 

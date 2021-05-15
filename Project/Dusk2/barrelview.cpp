@@ -12,6 +12,10 @@ BarrelView::BarrelView(int size, QVector3D location)
     initTextures();
 }
 
+void BarrelView::setFalling() {
+    barrel->setFalling();
+}
+
 void BarrelView::draw(bool isWireframe)
 {
     glPushMatrix();
@@ -21,6 +25,11 @@ void BarrelView::draw(bool isWireframe)
     bool textureForBody = true;
     bool textureForLid = false;
     QVector3D location = barrel->getLocation();
+
+    if (barrel->getFalling()) {
+        barrel->move();
+    }
+
     glTranslated(location.x(), location.y(), location.z());
 
     glColor4f(1, 1, 1, 1);

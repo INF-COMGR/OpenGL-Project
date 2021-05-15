@@ -11,6 +11,8 @@ CONFIG += c++11
 SOURCES += \
     barrel.cpp \
     barrelview.cpp \
+    bullet.cpp \
+    bulletview.cpp \
     camera.cpp \
     cameraview.cpp \
     floor.cpp \
@@ -28,6 +30,8 @@ SOURCES += \
 HEADERS += \
     barrel.h \
     barrelview.h \
+    bullet.h \
+    bulletview.h \
     camera.h \
     cameraview.h \
     floor.h \

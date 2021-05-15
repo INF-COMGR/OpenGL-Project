@@ -11,9 +11,11 @@ public:
     double getPosX();
     double getPosY();
     double getPosZ();
+    QVector3D getLocation();
     double getViewX();
     double getViewY();
     double getViewZ();
+    QVector3D getViewVector();
     double getUpX();
     double getUpY();
     double getUpZ();

@@ -8,11 +8,17 @@ class Barrel
 {
 public:
     enum BARRELTYPE { NORMAL, FIREBARREL, EXPLOSIVE };
-    Barrel(int size, QVector3D location);
+    Barrel(int size, QVector3D location, bool isFalling = false, float fallingSpeed = 0.1f);
 
     int getSize();
     QVector3D getLocation();
+    void move();
+    void setFalling();
+    bool getFalling();
 private:
+    bool isFalling;
+    float fallingSpeed;
+
     BARRELTYPE type;
     int size;
     QVector3D location;

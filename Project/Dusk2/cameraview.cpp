@@ -1,8 +1,16 @@
 #include "cameraview.h"
 #include "util.h"
 #include <QVector2D>
+#include <QVector3D>
 CameraView::CameraView()  {
     camera = new Camera();
+}
+
+QVector3D CameraView::getCameraLocation() {
+    return camera->getLocation();
+}
+QVector3D CameraView::getCameraLookingDirection() {
+    return camera->getViewVector();
 }
 
 void CameraView::Draw() {

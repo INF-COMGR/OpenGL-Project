@@ -17,8 +17,10 @@ private:
     unsigned int textureTop;
     int widthTop, heightTop, nrChannelsTop;
     unsigned char* imageTop;
+
 public:
     BarrelView(int size, QVector3D location);
+    void setFalling();
     void draw(bool isWireframe = false);
 };
 

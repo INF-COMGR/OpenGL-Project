@@ -6,6 +6,7 @@ class ShotgunView;
 class CameraView;
 class BarrelView;
 class RoomView;
+class BulletView;
 
 class SpaceView: public QOpenGLWidget {
 public:
@@ -23,8 +24,10 @@ private:
     BarrelView* barrelView2;
     ShotgunView* shotgunView;
     RoomView* roomView;
+    BulletView* bulletView;
     void keyPressEvent(QKeyEvent * e);
     void mouseMoveEvent(QMouseEvent* e);
+    void mousePressEvent(QMouseEvent* e);
     const int FPS_COUNT = 1000/120; //1 sec or 1000msec / 120FPS
     bool isWireframe = false;
 
