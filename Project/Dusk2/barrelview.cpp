@@ -9,6 +9,7 @@
 BarrelView::BarrelView(int size, QVector3D location)
 {
     barrel = new Barrel(size, location);
+    initTextures();
 }
 
 void BarrelView::draw(bool isWireframe)
@@ -100,28 +101,23 @@ void BarrelView::draw(bool isWireframe)
     glPopMatrix();
 }
 
-void BarrelView::addTexture(bool forBody) {
-    unsigned int texture;
-    int width, height, nrChannels;
-    QString path;
-    if (forBody)
-        path = {QCoreApplication::applicationDirPath() + "/../../../../Dusk2/barrelBody.jpg"};
-    else
-        path = {QCoreApplication::applicationDirPath() + "/../../../../Dusk2/barrelLid.jpg"};
+void BarrelView::initTextures() {
+    QString path{QCoreApplication::applicationDirPath() + "/../../../../Dusk2/barrelBody.jpg"};
 
-    unsigned char *image = stbi_load(path.toStdString().c_str(), &width, &height, &nrChannels, 0);
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    //TEXTURE SIDE BARREL
+    imageSide = stbi_load(path.toStdString().c_str(), &widthSide, &heightSide, &nrChannelsSide, 0);
+    glGenTextures(1, &textureSide);
+    glBindTexture(GL_TEXTURE_2D, textureSide);
 
-    if (image != NULL) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    if (imageSide != NULL) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthSide, heightSide, 0, GL_RGB, GL_UNSIGNED_BYTE, imageSide);
 
     } else {
         QTextStream out(stdout);
             out << stbi_failure_reason();
     }
 
-    stbi_image_free(image);
+    //stbi_image_free(image);
     // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -130,36 +126,23 @@ void BarrelView::addTexture(bool forBody) {
     // load and generate the texture
     glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
     // use our previously defined texture
-    glEnable( GL_TEXTURE_2D );
-    glBindTexture( GL_TEXTURE_2D , texture );
-}
 
-void BarrelView::getTexture() {
-    /*int imageWidth = 0;
-    int imageHeight = 0;
-    unsigned char* image = SOIL_load_image*/
-}
-/*
-void WallView::addTexture() {
-    unsigned int texture;
-    int width, height, nrChannels;
+    //TEXTURE TOP BARREL
+    path = {QCoreApplication::applicationDirPath() + "/../../../../Dusk2/barrelLid.jpg"};
 
-    //TODO: LOOK FOR SOLUTION FOR ABSOLUTE PATH
-    QString path{QCoreApplication::applicationDirPath() + "/../../../../Dusk2/wall.jpg"};
-    std::cout << " " << path.toStdString() << " ";
-    unsigned char *image = stbi_load(path.toStdString().c_str(), &width, &height, &nrChannels, 0);
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    imageTop = stbi_load(path.toStdString().c_str(), &widthTop, &heightTop, &nrChannelsTop, 0);
+    glGenTextures(1, &textureTop);
+    glBindTexture(GL_TEXTURE_2D, textureTop);
 
-    if (image != NULL) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    }
-    else {
+    if (imageTop != NULL) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthTop, heightTop, 0, GL_RGB, GL_UNSIGNED_BYTE, imageTop);
+
+    } else {
         QTextStream out(stdout);
             out << stbi_failure_reason();
     }
-    stbi_image_free(image);
 
+    //stbi_image_free(image);
     // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -168,6 +151,13 @@ void WallView::addTexture() {
     // load and generate the texture
     glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
     // use our previously defined texture
+
+}
+
+void BarrelView::addTexture(bool forBody) {
     glEnable( GL_TEXTURE_2D );
-    glBindTexture( GL_TEXTURE_2D , texture );
-}*/
+    if (forBody)
+        glBindTexture( GL_TEXTURE_2D , textureSide );
+    else
+        glBindTexture( GL_TEXTURE_2D , textureTop );
+}

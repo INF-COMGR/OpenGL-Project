@@ -21,12 +21,7 @@ SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) 
     setFocusPolicy(Qt::StrongFocus);
 
     this->cameraView = new CameraView;
-    this->barrelView = new BarrelView(1, QVector3D(2, 0 , 0));
-    this->barrelView2 = new BarrelView(2, QVector3D(-2, 0, 0));
-
     this->isWireframe = isWireframe;
-
-    this->cameraView = new CameraView();
     //this->cameraView->changeCam(2, 2, 25, 0, 0, -1, 0, 1, 0);
     //this->cameraView->toggleFreeCam();
 }
@@ -59,9 +54,11 @@ void SpaceView::initializeGL () {
     QRect rec = QApplication::desktop()->screenGeometry();
     QCursor::setPos(rec.width()/2, rec.height()/2);
 
+    //Init models with textures & logic
     this->roomView = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
     this->shotgunView = new ShotgunView();
-
+    this->barrelView = new BarrelView(1, QVector3D(2, 0, 2));
+    this->barrelView2 = new BarrelView(2, QVector3D(-2, 0, 0));
 }
 
 /**

@@ -65,3 +65,4 @@ void ShotgunView::draw(bool isWireframe)
         }
     glPopMatrix();
 }
+
