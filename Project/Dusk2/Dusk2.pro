@@ -15,6 +15,7 @@ SOURCES += \
     cameraview.cpp \
     floor.cpp \
     floorview.cpp \
+    light.cpp \
     main.cpp \
     room.cpp \
     roomview.cpp \
@@ -32,6 +33,7 @@ HEADERS += \
     cameraview.h \
     floor.h \
     floorview.h \
+    light.h \
     room.h \
     roomview.h \
     shootapplication.h \

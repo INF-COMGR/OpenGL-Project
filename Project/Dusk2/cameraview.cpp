@@ -12,7 +12,7 @@ void CameraView::Draw() {
                 );
 
     //Draw Axes
-    glDisable( GL_LIGHTING );
+    //glDisable( GL_LIGHTING );
     glBegin(GL_LINES);
         glColor3f(1.0, 0.0, 0.0);
         glVertex3f(0.0, 0.0, 0.0);
@@ -24,7 +24,7 @@ void CameraView::Draw() {
         glVertex3f(0.0, 0.0, 0.0);
         glVertex3f(0.0, 0.0, 10.0);
     glEnd();
-    glEnable( GL_LIGHTING );
+    //glEnable( GL_LIGHTING );
 }
 
 void CameraView::keyPressEvent(QKeyEvent * e) {

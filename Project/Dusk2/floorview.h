@@ -1,7 +1,7 @@
 #ifndef FLOORVIEW_H
 #define FLOORVIEW_H
 #include "floor.h"
-
+#include <QVector3D>
 class FloorView
 {
 public:
@@ -12,6 +12,8 @@ private:
     void addTexture();
     Floor* floor;
     float red, green, blue;
+    QVector3D getNormal(QVector3D a, QVector3D b, QVector3D c);
+    QVector3D normalize(QVector3D normal);
 };
 
 #endif // FLOORVIEW_H

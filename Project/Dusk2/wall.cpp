@@ -10,15 +10,15 @@ Wall::Wall(double x1, double y1, double z1, double x2, double y2, double z2)
     this->z2 = z2;
 }
 
-QVector<double>* Wall::getBottomLeft() {
-    return new QVector<double>({x1, y1, z1});
+QVector3D* Wall::getBottomLeft() {
+    return new QVector3D(x1, y1, z1);
 }
-QVector<double>* Wall::getBottomRight() {
-    return new QVector<double>({x2, y1, z2});
+QVector3D* Wall::getBottomRight() {
+    return new QVector3D(x2, y1, z2);
 }
-QVector<double>* Wall::getTopLeft() {
-    return new QVector<double>({x1, y2, z1});
+QVector3D* Wall::getTopLeft() {
+    return new QVector3D(x1, y2, z1);
 }
-QVector<double>* Wall::getTopRight() {
-    return new QVector<double>({x2, y2, z2});
+QVector3D* Wall::getTopRight() {
+    return new QVector3D(x2, y2, z2);
 }

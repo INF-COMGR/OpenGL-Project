@@ -12,6 +12,8 @@ private:
 public:
     BarrelView(int size, QVector3D location);
     void draw(bool isWireframe = false);
+    QVector3D getNormal(QVector3D a, QVector3D b, QVector3D c);
+    QVector3D normalize(QVector3D normal);
 };
 
 #endif // BARRELVIEW_H

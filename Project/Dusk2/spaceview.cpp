@@ -21,8 +21,8 @@ SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) 
     setFocusPolicy(Qt::StrongFocus);
 
     this->cameraView = new CameraView;
-    this->barrelView = new BarrelView(1, QVector3D(2, 0 , 0));
-    this->barrelView2 = new BarrelView(2, QVector3D(-2, 0, 0));
+    this->barrelView = new BarrelView(1, QVector3D(2, 0 , 4));
+    this->barrelView2 = new BarrelView(2, QVector3D(8, 0, 10));
 
     this->isWireframe = isWireframe;
 
@@ -41,24 +41,39 @@ void SpaceView::initializeGL () {
     QOpenGLWidget::initializeGL();
 
     glShadeModel(GL_SMOOTH);
-
+    glEnable(GL_DEPTH_TEST);
     //canvasf
     glClearColor(0.0f, 0.0f, 0.0f,1.0f);
+
+    // ...Somewhere during initialization...
+    // enable color tracking glEnable(GL_COLOR_MATERIAL);
+    // set material properties which will be assigned by glColor glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+    // ...Somewhere in the main rendering loop of your program...
+    // Draw a polygon with material properties set by glColor glColor3f(0.0f, 0.0f, 1.0f);
+    // blue reflective properties glBegin(GL_TRIANGLES); glVertex3f(-1.0f, 0.0f, 0.0f); glVertex3f(0.0f, -1.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f); glEnd();
+//    glEnable(GL_COLOR_MATERIAL);
+//    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
     // Place light
     glEnable( GL_LIGHTING );
     glEnable( GL_LIGHT0 );
-    glEnable(GL_DEPTH_TEST);
 
-    GLfloat light0_position [] = {0.1f, 0.1f, 0.1f, 0.1f};
-    GLfloat light_diffuse []={ 1.0, 1.0, 1.0, 1.0 };
-    glLightfv ( GL_LIGHT0, GL_POSITION, light0_position );
-    glLightfv ( GL_LIGHT0, GL_DIFFUSE, light_diffuse );
+    // Create light components
+        GLfloat ambientLight[] = { 0.01f, 0.01f, 0.01f, 1.0f };
+        GLfloat diffuseLight[] = { 0.01f, 0.01f, 0.01f, 1.0f };
+        //GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+        GLfloat position[] = { -0.2f, 1.0f, -0.3f, 0.0f };
 
-    timer->start(10);
+        // Assign created components to GL_LIGHT0
+        glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+        //glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+        glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+
+    timer->start(50);
     QRect rec = QApplication::desktop()->screenGeometry();
     QCursor::setPos(rec.width()/2, rec.height()/2);
-
 }
 
 /**
@@ -83,11 +98,38 @@ void SpaceView::resizeGL ( int width, int height ) {
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
 }
 
 void SpaceView::paintGL () {
-    RoomView *room = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
+    RoomView *room = new RoomView(0,0,0,  100,20,100,  255.0f,192.0f,203.0f);
     ShotgunView* shotgun = new ShotgunView();
+
+    if (isWireframe) {
+        GLfloat ambientLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        GLfloat diffuseLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        //GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+        GLfloat position[] = { -0.2f, 1.0f, -0.3f, 0.0f };
+
+        // Assign created components to GL_LIGHT0
+        glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+        //glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+        glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+    } else {
+        GLfloat ambientLight[] = { 0.01f, 0.01f, 0.01f, 1.0f };
+        GLfloat diffuseLight[] = { 0.01f, 0.01f, 0.01f, 1.0f };
+        //GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+        GLfloat position[] = { -0.2f, 1.0f, -0.3f, 0.0f };
+
+        // Assign created components to GL_LIGHT0
+        glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+        //glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+        glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+    }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
@@ -95,10 +137,16 @@ void SpaceView::paintGL () {
     // store current matrix
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix( );
+
         shotgun->draw(isWireframe);
         this->cameraView->Draw();
         this->barrelView->draw(isWireframe);
+        this->barrelView2->draw(isWireframe);
         room->draw(isWireframe);
+
+
+    // restore current matrix
+    glMatrixMode( GL_MODELVIEW );
     glPopMatrix( );
 }
 

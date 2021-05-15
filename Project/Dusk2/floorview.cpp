@@ -44,10 +44,10 @@ void FloorView::draw(bool isWireframe) {
     if (!isWireframe)
         addTexture();
 
-    glColor4f((blue)/255.0f,
-              (green)/255.0f,
-              (blue)/255.0f,
-              1.0f);
+
+    glEnable(GL_NORMALIZE);
+//    float mcolor[] = { blue/255.0f, (green)/255.0f, (blue)/255.0f, 1.0f };
+//    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mcolor);
     glBegin( !isWireframe ? GL_QUADS : GL_LINE_LOOP );
         glTexCoord2d( 0.0, 5.0 );
         glVertex3f(x1,y1,z1);
@@ -58,7 +58,6 @@ void FloorView::draw(bool isWireframe) {
         glTexCoord2d( 5.0, 5.0 );
         glVertex3f(x4,y4,z4);
     glEnd();
-    glColor4f(1, 1, 1, 1);
 }
 
 void FloorView::addTexture() {
@@ -90,5 +89,25 @@ void FloorView::addTexture() {
     // use our previously defined texture
     glEnable( GL_TEXTURE_2D );
     glBindTexture( GL_TEXTURE_2D , texture );
+}
+
+QVector3D FloorView::getNormal(QVector3D a, QVector3D b, QVector3D c) {
+
+    QVector3D x = b - a;
+    QVector3D y = c - a;
+    QVector3D normal = QVector3D::crossProduct(x, y);
+    normal = normalize(normal);
+    return normal;
+
+
+}
+
+QVector3D FloorView::normalize(QVector3D a) {
+    float sum = (a[0])*(a[0]) + (a[1])*(a[1]) + (a[2])*(a[2]);
+    float length = (float) sqrt( (double) sum);
+    for (int i = 0; i < 3; ++ i) {
+        a[i] = a[i] / length;
+    }
+    return a;
 }
 
