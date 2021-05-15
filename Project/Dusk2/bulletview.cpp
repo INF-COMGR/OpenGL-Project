@@ -12,7 +12,6 @@ void BulletView::draw(bool isWireframe) {
         bullet->move();
         QVector3D location = bullet->getLocation();
         glTranslated(location.x(), location.y(), location.z());
-        glEnable( GL_LIGHTING );
         Util::drawSolidSphere(0.2, 25, 25);
     glPopMatrix();
 }

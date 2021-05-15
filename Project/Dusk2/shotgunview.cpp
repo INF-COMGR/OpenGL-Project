@@ -9,9 +9,10 @@ ShotgunView::ShotgunView()
 
 void ShotgunView::draw(bool isWireframe)
 {
+    glEnable(GL_NORMALIZE);
     glPushMatrix();
         glTranslated(0, -0.5, -2);
-        glEnable( GL_LIGHTING );
+
         if (!isWireframe) {
             glBegin( GL_QUAD_STRIP );
                 //left side - left barrel
