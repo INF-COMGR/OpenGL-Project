@@ -15,7 +15,8 @@ void BulletView::draw(bool isWireframe) {
             bullet->update();
         QVector3D location = bullet->getLocation();
         glTranslated(location.x(), location.y(), location.z());
-        glEnable( GL_LIGHTING );
+        if (!isWireframe)
+            glEnable(GL_LIGHTING);
         glBegin( !isWireframe ? GL_POLYGON : GL_LINE_LOOP);
             glVertex3d(0, size, 0);
             glVertex3d(size, 0, 0);

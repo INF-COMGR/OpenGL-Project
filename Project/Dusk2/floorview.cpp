@@ -24,22 +24,22 @@ FloorView::FloorView(Floor* floor, float red, float green, float blue) {
 }
 
 void FloorView::draw(bool isWireframe) {
-    QVector<double> bottomLeft = *floor->getBottomLeft();
+    QVector3D bottomLeft = *floor->getBottomLeft();
     double x1 = bottomLeft[0];
     double y1 = bottomLeft[1];
     double z1 = bottomLeft[2];
 
-    QVector<double> bottomRight = *floor->getBottomRight();
+    QVector3D bottomRight = *floor->getBottomRight();
     double x2 = bottomRight[0];
     double y2 = bottomRight[1];
     double z2 = bottomRight[2];
 
-    QVector<double> topRight = *floor->getTopRight();
+    QVector3D topRight = *floor->getTopRight();
     double x3 = topRight[0];
     double y3 = topRight[1];
     double z3 = topRight[2];
 
-    QVector<double> topLeft = *floor->getTopLeft();
+    QVector3D topLeft = *floor->getTopLeft();
     double x4 = topLeft[0];
     double y4 = topLeft[1];
     double z4 = topLeft[2];
@@ -47,21 +47,34 @@ void FloorView::draw(bool isWireframe) {
     if (!isWireframe)
         addTexture();
 
-    glColor4f((blue)/255.0f,
-              (green)/255.0f,
-              (blue)/255.0f,
-              1.0f);
+//    glColor4f((blue)/255.0f,
+//              (green)/255.0f,
+//              (blue)/255.0f,
+//              1.0f);
+
     glBegin( !isWireframe ? GL_QUADS : GL_LINE_LOOP );
+        QVector3D normal = QVector3D::normal(bottomLeft, bottomRight);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 0.0, 5.0 );
         glVertex3f(x1,y1,z1);
+
+        normal = QVector3D::normal(bottomRight, topRight);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 0.0, 0.0 );
         glVertex3f(x2,y2,z2);
+
+        normal = QVector3D::normal(topRight, topLeft);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 5.0, 0.0 );
         glVertex3f(x3,y3,z3);
+
+        normal = QVector3D::normal(topLeft, bottomLeft);
+        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 5.0, 5.0 );
         glVertex3f(x4,y4,z4);
     glEnd();
-    glColor4f(1, 1, 1, 1);
+
+//    glColor4f(1, 1, 1, 1);
 }
 
 void FloorView::initTextures() {

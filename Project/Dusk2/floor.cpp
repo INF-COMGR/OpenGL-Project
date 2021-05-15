@@ -12,17 +12,17 @@ Floor::Floor(double x1, double z1, double x2, double z2)
     this->hitbox = new HitBox(QVector3D(x1, 0, z1),QVector3D(x2, -100, z2));
 }
 
-QVector<double>* Floor::getBottomLeft() {
-    return new QVector<double>({x1, 0, z1});
+QVector3D* Floor::getBottomLeft() {
+    return new QVector3D(x1, 0, z1);
 }
-QVector<double>* Floor::getBottomRight() {
-    return new QVector<double>({x2, 0, z1});
+QVector3D* Floor::getBottomRight() {
+    return new QVector3D(x2, 0, z1);
 }
-QVector<double>* Floor::getTopLeft() {
-    return new QVector<double>({x1, 0, z2});
+QVector3D* Floor::getTopLeft() {
+    return new QVector3D(x1, 0, z2);
 }
-QVector<double>* Floor::getTopRight() {
-    return new QVector<double>({x2, 0, z2});
+QVector3D* Floor::getTopRight() {
+    return new QVector3D(x2, 0, z2);
 }
 
 HitBox* Floor::getHitBox() {

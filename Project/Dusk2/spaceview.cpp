@@ -24,8 +24,6 @@ SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) 
 
     this->cameraView = new CameraView;
     this->isWireframe = isWireframe;
-    //this->cameraView->changeCam(2, 2, 25, 0, 0, -1, 0, 1, 0);
-    //this->cameraView->toggleFreeCam();
 }
 
 /**
@@ -47,10 +45,12 @@ void SpaceView::initializeGL () {
     glEnable( GL_LIGHT0 );
     glEnable(GL_DEPTH_TEST);
 
-    GLfloat light0_position [] = {0.1f, 0.1f, 0.1f, 0.1f};
+    GLfloat light0_position [] = {0.2f, 1.0f, 0.3f, 0.0f};
     GLfloat light_diffuse []={ 1.0, 1.0, 1.0, 1.0 };
+    GLfloat light_ambient []={ 1.0, 1.0, 1.0, 1.0 };
     glLightfv ( GL_LIGHT0, GL_POSITION, light0_position );
     glLightfv ( GL_LIGHT0, GL_DIFFUSE, light_diffuse );
+    glLightfv( GL_LIGHT0, GL_AMBIENT, light_ambient);
 
     timer->start(10);
     QRect rec = QApplication::desktop()->screenGeometry();

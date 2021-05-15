@@ -3,6 +3,7 @@
 #include "wallview.h"
 #include "floorview.h"
 #include "hitbox.h"
+#include <QVector>
 
 RoomView::RoomView(double x1, double y1, double z1, double x2, double y2, double z2, float red, float green, float blue)
 {

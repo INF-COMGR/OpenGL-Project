@@ -40,23 +40,39 @@ void BarrelView::draw(bool isWireframe)
     }
 
     glTranslated(location.x(), location.y(), location.z());
-
-    glColor4f(1, 1, 1, 1);
+    QVector3D normal;
 
     // Bottom
     addTexture(textureForLid);
     glEnable( GL_LIGHTING );
     glBegin( !isWireframe ? GL_POLYGON : GL_LINE_LOOP);
+        normal = QVector3D::normal(QVector3D{0,0,-2*alpha}, QVector3D{beta,0,-alpha});
+        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d(0 + 0.5, -2 * alpha + 0.5);
         glVertex3d(0, 0, -2 * alpha);
+
+        normal = QVector3D::normal(QVector3D{beta,0,-alpha}, QVector3D{beta,0,alpha});
+        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d(beta+  0.5, -alpha + 0.5);
         glVertex3d(beta, 0, -alpha);
+
+        normal = QVector3D::normal(QVector3D{beta,0,alpha}, QVector3D{0,0,2*alpha});
+        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d(beta + 0.5, alpha+ 0.5);
         glVertex3d(beta, 0, alpha);
+
+        normal = QVector3D::normal(QVector3D{0,0,2*alpha}, QVector3D{-beta,0,alpha});
+        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d(0 + 0.5, 2 * alpha + 0.5);
         glVertex3d(0, 0, 2 * alpha);
+
+        normal = QVector3D::normal(QVector3D{-beta,0,alpha}, QVector3D{-beta,0,-alpha});
+        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d(-beta + 0.5, alpha+ 0.5);
         glVertex3d(-beta, 0, alpha);
+
+        normal = QVector3D::normal(QVector3D{-beta,0,-alpha}, QVector3D{0,0,-2*alpha});
+        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d(-beta + 0.5, -alpha + 0.5);
         glVertex3d(-beta, 0, -alpha);
     glEnd();
