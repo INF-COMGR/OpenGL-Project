@@ -1,6 +1,6 @@
 #ifndef BARRELVIEW_H
 #define BARRELVIEW_H
-
+#include "util.h"
 #include <QVector3D>
 class Barrel;
 
@@ -22,6 +22,8 @@ public:
     BarrelView(int size, QVector3D location);
     void setFalling();
     void draw(bool isWireframe = false);
+    int* getUniqueColor(int i);
+    void drawColor();
 };
 
 #endif // BARRELVIEW_H

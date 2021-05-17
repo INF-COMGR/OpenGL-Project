@@ -35,6 +35,8 @@ public:
 
     void mouseUpdate(const QVector2D& newMousePosition);
 
+    QVector2D getMousePosition();
+
 private:
     QVector3D getStrafe();
     float camPosx,camPosy,camPosz;

@@ -146,5 +146,9 @@ double Camera::getUpZ() {
     return camUpz;
 }
 
+QVector2D Camera::getMousePosition() {
+    return this->oldMousePosition;
+}
+
 
 

@@ -11,6 +11,7 @@ class BulletView;
 class SpaceView: public QOpenGLWidget {
 public:
     SpaceView(QWidget *parent=0, bool isWireframe = false);
+    int* getUniqueColor(int i);
 
 protected:
     void initializeGL();
@@ -30,6 +31,7 @@ private:
     void mousePressEvent(QMouseEvent* e);
     const int FPS_COUNT = 1000/120; //1 sec or 1000msec / 120FPS
     bool isWireframe = false;
+    int pickedID;
 
 };
 #endif // SPACEVIEW_H

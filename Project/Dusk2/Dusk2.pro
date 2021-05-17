@@ -3,6 +3,8 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
+macx:QMAKE_CXXFLAGS += -stdlib=libc++
+macx:QMAKE_LFLAGS += -stdlib=libc++
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -17,13 +19,20 @@ SOURCES += \
     cameraview.cpp \
     floor.cpp \
     floorview.cpp \
+    loader.cpp \
     main.cpp \
+    mousepicker.cpp \
+    rawmodel.cpp \
+    renderer.cpp \
     room.cpp \
     roomview.cpp \
+    shaderprogram.cpp \
+    shaderstatic.cpp \
     shootapplication.cpp \
     shotgun.cpp \
     shotgunview.cpp \
     spaceview.cpp \
+    texture.cpp \
     wall.cpp \
     wallview.cpp
 
@@ -36,13 +45,20 @@ HEADERS += \
     cameraview.h \
     floor.h \
     floorview.h \
+    loader.h \
+    mousepicker.h \
+    rawmodel.h \
+    renderer.h \
     room.h \
     roomview.h \
+    shaderprogram.h \
+    shaderstatic.h \
     shootapplication.h \
     shotgun.h \
     shotgunview.h \
     spaceview.h \
     stb_image.h \
+    texture.h \
     util.h \
     wall.h \
     wallview.h

@@ -1,6 +1,6 @@
 #include "barrelview.h"
 #include "barrel.h"
-#include "util.h"
+
 #include <QCoreApplication>
 #include <QTextStream>
 #define STB_IMAGE_IMPLEMENTATION
@@ -16,9 +16,105 @@ void BarrelView::setFalling() {
     barrel->setFalling();
 }
 
+void BarrelView::drawColor() {
+    glPushMatrix();
+    glDisable( GL_TEXTURE_2D );
+
+    int size = barrel->getSize();
+    float alpha = size/4.0f;
+    float beta = sqrt(3) * alpha;
+    QVector3D location = barrel->getLocation();
+
+    if (barrel->getFalling()) {
+        barrel->move();
+    }
+
+    glTranslated(location.x(), location.y(), location.z());
+    //int temp[] = {*zgetUniqueColor(2)};
+    //glColor3iv(temp);
+
+    // Bottom
+    glBegin( GL_POLYGON );
+        glTexCoord2d(0 + 0.5, -2 * alpha + 0.5);
+        glVertex3d(0, 0, -2 * alpha);
+
+        glTexCoord2d(beta+  0.5, -alpha + 0.5);
+        glVertex3d(beta, 0, -alpha);
+
+        glTexCoord2d(beta + 0.5, alpha+ 0.5);
+        glVertex3d(beta, 0, alpha);
+
+        glTexCoord2d(0 + 0.5, 2 * alpha + 0.5);
+        glVertex3d(0, 0, 2 * alpha);
+
+        glTexCoord2d(-beta + 0.5, alpha+ 0.5);
+        glVertex3d(-beta, 0, alpha);
+
+        glTexCoord2d(-beta + 0.5, -alpha + 0.5);
+        glVertex3d(-beta, 0, -alpha);
+    glEnd();
+
+
+     // Body
+    glBegin( GL_POLYGON );
+        glTexCoord2d( 0, 0);
+        glVertex3d(0, 0, -2 * alpha);
+        glTexCoord2d( 0, 1);
+        glVertex3d(0, size, -2 * alpha);
+        glTexCoord2d(1, 0);
+        glVertex3d(beta, 0, -alpha);
+        glTexCoord2d( 1, 1);
+        glVertex3d(beta, size, -alpha);
+
+        glTexCoord2d( 0, 0);
+        glVertex3d(beta, 0, alpha);
+        glTexCoord2d( 0, 1);
+        glVertex3d(beta, size, alpha);
+        glTexCoord2d( 1, 0);
+        glVertex3d(0, 0, 2 * alpha);
+        glTexCoord2d( 1, 1);
+        glVertex3d(0, size, 2 * alpha);
+
+        glTexCoord2d(0, 0);
+        glVertex3d(-beta, 0, alpha);
+        glTexCoord2d( 0, 1);
+        glVertex3d(-beta, size, alpha);
+        glTexCoord2d( 1, 0);
+        glVertex3d(-beta, 0, -alpha);
+        glTexCoord2d( 1, 1);
+        glVertex3d(-beta, size, -alpha);
+
+        glTexCoord2d( 0, 0);
+        glVertex3d(0, 0, -2 * alpha);
+        glTexCoord2d( 0, 1);
+        glVertex3d(0, size, -2 * alpha);
+
+    glEnd();
+
+    // Top
+    glBegin( GL_POLYGON );
+        glTexCoord2d(0 + 0.5, -2 * alpha + 0.5);
+        glVertex3d(0, size, -2 * alpha);
+        glTexCoord2d(beta + 0.5, -alpha + 0.5);
+        glVertex3d(beta, size, -alpha);
+        glTexCoord2d(beta + 0.5, alpha + 0.5);
+        glVertex3d(beta, size, alpha);
+        glTexCoord2d(0 + 0.5, 2 * alpha + 0.5);
+        glVertex3d(0, size, 2 * alpha);
+        glTexCoord2d(-beta + 0.5, alpha + 0.5);
+        glVertex3d(-beta, size, alpha);
+        glTexCoord2d(-beta + 0.5, -alpha + 0.5);
+        glVertex3d(-beta, size, -alpha);
+    glEnd();
+
+    glPopMatrix();
+
+}
+
 void BarrelView::draw(bool isWireframe)
 {
     glPushMatrix();
+
     int size = barrel->getSize();
     float alpha = size/4.0f;
     float beta = sqrt(3) * alpha;
@@ -32,10 +128,8 @@ void BarrelView::draw(bool isWireframe)
 
     glTranslated(location.x(), location.y(), location.z());
     QVector3D normal;
-
     // Bottom
     addTexture(textureForLid);
-    glEnable( GL_LIGHTING );
     glBegin( !isWireframe ? GL_POLYGON : GL_LINE_LOOP);
         normal = QVector3D::normal(QVector3D{0,0,-2*alpha}, QVector3D{beta,0,-alpha});
         glNormal3f(normal[0], normal[1], normal[2]);
@@ -186,3 +280,14 @@ void BarrelView::addTexture(bool forBody) {
     else
         glBindTexture( GL_TEXTURE_2D , textureTop );
 }
+
+int* BarrelView::getUniqueColor(int i) {
+    // Convert "i", the integer mesh ID, into an RGB color
+    int r = (i & 0x000000FF) >>  0;
+    int g = (i & 0x0000FF00) >>  8;
+    int b = (i & 0x00FF0000) >> 16;
+
+    int color[] = {r, g, b};
+    return color;
+}
+

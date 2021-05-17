@@ -72,3 +72,11 @@ void CameraView::mouseMouveEvent(QMouseEvent* e) {
     QVector2D mouse = {(float) e->x(), (float) e->y()};
     camera->mouseUpdate(mouse);
 }
+
+QVector2D CameraView::getMousePosition() {
+    return this->camera->getMousePosition();
+}
+
+Camera CameraView::getCamera() {
+    return *this->camera;
+}
