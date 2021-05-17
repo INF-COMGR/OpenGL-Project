@@ -13,7 +13,7 @@ ShotgunView::ShotgunView()
 
 void ShotgunView::draw(bool isWireframe)
 {
-    //glEnable(GL_NORMALIZE);
+    glEnable(GL_NORMALIZE);
     glPushMatrix();
         glTranslated(0, -0.5, -2);
 
