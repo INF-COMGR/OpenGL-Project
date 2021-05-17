@@ -13,11 +13,13 @@ ShotgunView::ShotgunView()
 
 void ShotgunView::draw(bool isWireframe)
 {
-    glEnable(GL_NORMALIZE);
+    //glEnable(GL_NORMALIZE);
     glPushMatrix();
         glTranslated(0, -0.5, -2);
 
-        addTexture();
+        if (!isWireframe)
+            addTexture();
+
         if (!isWireframe) {
             glBegin( GL_QUADS );
                 //left side - left barrel

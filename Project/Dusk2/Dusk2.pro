@@ -19,6 +19,7 @@ SOURCES += \
     floorview.cpp \
     hitbox.cpp \
     main.cpp \
+    picking.cpp \
     room.cpp \
     roomview.cpp \
     shootapplication.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     floor.h \
     floorview.h \
     hitbox.h \
+    picking.h \
     room.h \
     roomview.h \
     shootapplication.h \

@@ -4,6 +4,7 @@
 #include <QOpenGLWidget>
 #include <QLabel>
 #include <QSoundEffect>
+#include "picking.h"
 
 class ShotgunView;
 class CameraView;
@@ -38,6 +39,7 @@ private:
     bool gotAllBarrels();
     QLabel* scoreLabel;
     QLabel* explanationLabel;
+    QLabel* pickingLabel;
     const int BEGIN_SCORE = 10000;
     int penalty = 0;
     void updateScore();
@@ -45,5 +47,7 @@ private:
     QSoundEffect* shotGunSound;
     QSoundEffect* winningSound;
     bool winningSoundPlayed = false;
+
+    void restart();
 };
 #endif // SPACEVIEW_H
