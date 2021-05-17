@@ -18,6 +18,7 @@ SOURCES += \
     floor.cpp \
     floorview.cpp \
     hitbox.cpp \
+    instancegrass.cpp \
     main.cpp \
     picking.cpp \
     room.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
     floor.h \
     floorview.h \
     hitbox.h \
+    instancegrass.h \
     picking.h \
     room.h \
     roomview.h \

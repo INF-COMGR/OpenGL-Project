@@ -6,6 +6,10 @@
 #include "hitbox.h"
 #include "stb_image.h"
 
+#define highp
+#define mediump
+#define lowp
+
 WallView::WallView(double x1, double y1, double z1, double x2, double y2, double z2, float red, float green, float blue, DIRECTION direction)
 {
     this->wall = new Wall(x1, y1, z1, x2, y2, z2, direction);
@@ -53,26 +57,20 @@ void WallView::draw(bool isWireframe) {
     glEnable(GL_NORMALIZE);
 
     glBegin(!isWireframe ? GL_QUADS : GL_LINE_LOOP);
-//        QVector3D normal = QVector3D::normal(bottomLeft, bottomRight);
-//        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 0.0, 5.0 );
         glVertex3f(x1,y1,z1);
 
-//        normal = QVector3D::normal(bottomRight, topRight);
-//        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 0.0, 0.0 );
         glVertex3f(x2,y2,z2);
 
-//        normal = QVector3D::normal(topRight, topLeft);
-//        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 2.5, 0.0 );
         glVertex3f(x3,y3,z3);
 
-//        normal = QVector3D::normal(topLeft, bottomLeft);
-//        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 2.5, 5.0);
         glVertex3f(x4,y4,z4);
     glEnd();
+
+
 }
 
 void WallView::initTextures() {
@@ -107,5 +105,9 @@ void WallView::addTexture() {
 
 HitBox* WallView::getHitBox() {
     return wall->getHitBox();
+}
+
+void WallView::shadersTest() {
+
 }
 

@@ -48,6 +48,8 @@ private:
     QSoundEffect* winningSound;
     bool winningSoundPlayed = false;
 
+    void shaders();
+
     void restart();
 };
 #endif // SPACEVIEW_H

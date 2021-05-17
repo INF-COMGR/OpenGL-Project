@@ -7,12 +7,15 @@
 #include "shotgunview.h"
 #include "bulletview.h"
 #include "hitbox.h"
+#include "instancegrass.h"
 
 #include "QKeyEvent"
 #include <QApplication>
 #include <QCursor>
 #include <QDesktopWidget>
 #include <QTextStream>
+#include <Qt3DRender/QShaderProgram>
+#include <QOpenGLShaderProgram>
 
 
 SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) {
@@ -155,6 +158,8 @@ void SpaceView::paintGL () {
         this->roomView->draw(isWireframe);
         if (bulletView != nullptr)
             bulletView->draw(isWireframe);
+        //shaders();
+        InstanceGrass* test = new InstanceGrass();
     glPopMatrix( );
 }
 
@@ -219,6 +224,51 @@ bool SpaceView::gotAllBarrels() {
         winningSound->play();
     winningSoundPlayed = true;
     return true;
+}
+
+void SpaceView::shaders() {
+    QOpenGLShaderProgram program(this);
+    program.addShaderFromSourceCode(QOpenGLShader::Vertex,
+        "attribute highp vec4 vertex;\n"
+        "uniform highp mat4 matrix;\n"
+        "void main(void)\n"
+        "{\n"
+        "   gl_Position = matrix * vertex;\n"
+        "}");
+    program.addShaderFromSourceCode(QOpenGLShader::Fragment,
+        "uniform mediump vec4 color;\n"
+        "void main(void)\n"
+        "{\n"
+        "   gl_FragColor = color;\n"
+        "}");
+
+    program.link();
+    program.bind();
+
+    QMatrix4x4 pmvMatrix;
+    pmvMatrix.ortho(rect());
+
+
+    int vertexLocation = program.attributeLocation("vertex");
+    int matrixLocation = program.uniformLocation("matrix");
+    int colorLocation = program.uniformLocation("color");
+    static GLfloat const triangleVertices[] = {
+        -1.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        0.0f,  1.0f, 0.0f
+    };
+
+    QColor color(255, 0, 0, 255);
+
+    program.enableAttributeArray(vertexLocation);
+    program.setAttributeArray(vertexLocation, triangleVertices, 3);
+    program.setUniformValue(matrixLocation, pmvMatrix);
+    program.setUniformValue(colorLocation, color);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    program.disableAttributeArray(vertexLocation);
+    program.release();
 }
 
 
