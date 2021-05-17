@@ -59,7 +59,7 @@ void SpaceView::initializeGL () {
     //Init models with textures & logic
     this->roomView = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
     this->shotgunView = new ShotgunView();
-    this->barrelView = new BarrelView(1, QVector3D(2, 7, 2));
+    this->barrelView = new BarrelView(1, QVector3D(5, 7, 2));
     this->barrelView2 = new BarrelView(2, QVector3D(2, 4, 2));
     this->barrelView->setFalling();
     this->barrelView2->setFalling();
@@ -106,6 +106,8 @@ void SpaceView::paintGL () {
         this->roomView->draw(isWireframe);
         if (bulletView != nullptr)
             bulletView->draw(isWireframe);
+
+        //glDrawArraysInstanced(GL_TRIANGLES, 0, 10, )
     glPopMatrix( );
 }
 
