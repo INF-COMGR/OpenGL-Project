@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/:">
+        <file>shotgunsound.wav</file>
+        <file>winningsound.wav</file>
+    </qresource>
+</RCC>

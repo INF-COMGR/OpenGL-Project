@@ -1,6 +1,6 @@
 QT       += core gui
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimedia
 
 CONFIG += c++11
 
@@ -17,7 +17,9 @@ SOURCES += \
     cameraview.cpp \
     floor.cpp \
     floorview.cpp \
+    hitbox.cpp \
     main.cpp \
+    picking.cpp \
     room.cpp \
     roomview.cpp \
     shootapplication.cpp \
@@ -36,6 +38,8 @@ HEADERS += \
     cameraview.h \
     floor.h \
     floorview.h \
+    hitbox.h \
+    picking.h \
     room.h \
     roomview.h \
     shootapplication.h \
@@ -54,3 +58,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resources.qrc

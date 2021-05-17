@@ -2,6 +2,8 @@
 #define FLOOR_H
 #include <QVector3D>
 
+class HitBox;
+
 class Floor
 {
 public:
@@ -10,8 +12,10 @@ public:
     QVector3D* getBottomRight();
     QVector3D* getTopLeft();
     QVector3D* getTopRight();
+    HitBox* getHitBox();
 private:
      double x1, z1, x2, z2;
+     HitBox* hitbox;
 };
 
 #endif // FLOOR_H

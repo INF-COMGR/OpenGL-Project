@@ -2,5 +2,4 @@
 
 Shotgun::Shotgun()
 {
-
 }

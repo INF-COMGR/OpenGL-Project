@@ -5,6 +5,7 @@
 #include <QTextStream>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "hitbox.h"
 
 BarrelView::BarrelView(int size, QVector3D location)
 {
@@ -12,12 +13,29 @@ BarrelView::BarrelView(int size, QVector3D location)
     initTextures();
 }
 
+HitBox* BarrelView::getHitBox() {
+    return barrel->getHitBox();
+}
+
 void BarrelView::setFalling() {
     barrel->setFalling();
 }
 
+void BarrelView::addHitBox(HitBox* hitbox) {
+    barrel->addHitBox(hitbox);
+}
+
 void BarrelView::draw(bool isWireframe)
 {
+    if (barrel->getHitBox()->getHitByBullet())
+        barrel->getHitBox()->setInvalid();
+    if (!this->getHitBox()->getHitByBullet())
+        drawBarrel(isWireframe);
+    else
+        drawExplosion(isWireframe);
+}
+
+void BarrelView::drawBarrel(bool isWireframe) {
     glPushMatrix();
     int size = barrel->getSize();
     float alpha = size/4.0f;
@@ -26,9 +44,9 @@ void BarrelView::draw(bool isWireframe)
     bool textureForLid = false;
     QVector3D location = barrel->getLocation();
 
-    if (barrel->getFalling()) {
+    if (barrel->getFalling())
         barrel->move();
-    }
+
 
     glTranslated(location.x(), location.y(), location.z());
     QVector3D normal;
@@ -129,6 +147,10 @@ void BarrelView::draw(bool isWireframe)
     glEnd();
 
     glPopMatrix();
+}
+
+void BarrelView::drawExplosion(bool isWireframe) {
+
 }
 
 void BarrelView::initTextures() {

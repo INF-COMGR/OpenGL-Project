@@ -16,8 +16,8 @@ QVector3D CameraView::getCameraLookingDirection() {
 void CameraView::Draw() {
     gluLookAt( camera->getPosX(), camera->getPosY(), camera->getPosZ(),
                camera->getPosX() + camera->getViewX(),  camera->getPosY() + camera->getViewY(), camera->getPosZ() + camera->getViewZ(),
-               camera->getUpX(), camera->getUpY(), camera->getUpZ()
-                );
+               camera->getUpX(), camera->getUpY(), camera->getUpZ());
+
 
     //Draw Axes
     glDisable( GL_LIGHTING );
@@ -33,6 +33,11 @@ void CameraView::Draw() {
         glVertex3f(0.0, 0.0, 10.0);
     glEnd();
     glEnable( GL_LIGHTING );
+
+}
+
+int CameraView::pick() {
+    return picking->pick(camera);
 }
 
 void CameraView::keyPressEvent(QKeyEvent * e) {

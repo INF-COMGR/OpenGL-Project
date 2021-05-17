@@ -3,6 +3,7 @@
 
 #include "QVector"
 #include "QVector3D"
+class HitBox;
 
 class Barrel
 {
@@ -15,6 +16,9 @@ public:
     void move();
     void setFalling();
     bool getFalling();
+
+    HitBox* getHitBox();
+    void addHitBox(HitBox* hitbox);
 private:
     bool isFalling;
     float fallingSpeed;
@@ -22,6 +26,11 @@ private:
     BARRELTYPE type;
     int size;
     QVector3D location;
+
+    HitBox* hitbox;
+    QVector<HitBox*> otherHitBoxes;
+    bool hasCollided();
+    float sideSize;
 };
 
 #endif // BARREL_H
