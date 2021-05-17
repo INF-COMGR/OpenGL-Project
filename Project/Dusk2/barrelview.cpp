@@ -35,7 +35,12 @@ void BarrelView::draw(bool isWireframe)
 
     // Bottom
     addTexture(textureForLid);
-    glEnable( GL_LIGHTING );
+
+    float mcolor[] = { 1.0f,1.0f, 1.0f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mcolor);
+
+    glEnable(GL_NORMALIZE);
+
     glBegin( !isWireframe ? GL_POLYGON : GL_LINE_LOOP);
         normal = QVector3D::normal(QVector3D{0,0,-2*alpha}, QVector3D{beta,0,-alpha});
         glNormal3f(normal[0], normal[1], normal[2]);

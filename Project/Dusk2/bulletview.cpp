@@ -8,6 +8,10 @@ BulletView::BulletView(QVector3D location, QVector3D flyingDirection)
 }
 
 void BulletView::draw(bool isWireframe) {
+    float mcolor[] = { 1.0f,1.0f, 1.0f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mcolor);
+
+    glEnable(GL_NORMALIZE);
     glPushMatrix();
         bullet->move();
         QVector3D location = bullet->getLocation();

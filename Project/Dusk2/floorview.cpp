@@ -46,10 +46,10 @@ void FloorView::draw(bool isWireframe) {
     if (!isWireframe)
         addTexture();
 
-//    glColor4f((blue)/255.0f,
-//              (green)/255.0f,
-//              (blue)/255.0f,
-//              1.0f);
+    float mcolor[] = { blue/255.0f, (green)/255.0f, (blue)/255.0f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mcolor);
+
+    glEnable(GL_NORMALIZE);
 
     glBegin( !isWireframe ? GL_QUADS : GL_LINE_LOOP );
         QVector3D normal = QVector3D::normal(bottomLeft, bottomRight);

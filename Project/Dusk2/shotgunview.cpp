@@ -9,6 +9,8 @@ ShotgunView::ShotgunView()
 
 void ShotgunView::draw(bool isWireframe)
 {
+    float mcolor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mcolor);
     glEnable(GL_NORMALIZE);
     glPushMatrix();
         glTranslated(0, -0.5, -2);
