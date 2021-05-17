@@ -53,23 +53,23 @@ void WallView::draw(bool isWireframe) {
 //              1.0f);
 
     glBegin(!isWireframe ? GL_QUADS : GL_LINE_LOOP);
-        QVector3D normal = QVector3D::normal(bottomLeft, bottomRight);
-        glNormal3f(normal[0], normal[1], normal[2]);
+//        QVector3D normal = QVector3D::normal(bottomLeft, bottomRight);
+//        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 0.0, 5.0 );
         glVertex3f(x1,y1,z1);
 
-        normal = QVector3D::normal(bottomRight, topRight);
-        glNormal3f(normal[0], normal[1], normal[2]);
+//        normal = QVector3D::normal(bottomRight, topRight);
+//        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 0.0, 0.0 );
         glVertex3f(x2,y2,z2);
 
-        normal = QVector3D::normal(topRight, topLeft);
-        glNormal3f(normal[0], normal[1], normal[2]);
+//        normal = QVector3D::normal(topRight, topLeft);
+//        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 2.5, 0.0 );
         glVertex3f(x3,y3,z3);
 
-        normal = QVector3D::normal(topLeft, bottomLeft);
-        glNormal3f(normal[0], normal[1], normal[2]);
+//        normal = QVector3D::normal(topLeft, bottomLeft);
+//        glNormal3f(normal[0], normal[1], normal[2]);
         glTexCoord2d( 2.5, 5.0);
         glVertex3f(x4,y4,z4);
     glEnd();

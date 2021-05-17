@@ -19,6 +19,8 @@ private:
     int widthTop, heightTop, nrChannelsTop;
     unsigned char* imageTop;
 
+    void drawBarrel(bool isWireframe);
+    void drawExplosion(bool isWireframe);
 public:
     HitBox* getHitBox();
     BarrelView(int size, QVector3D location);

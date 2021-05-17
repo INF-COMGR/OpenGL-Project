@@ -18,9 +18,7 @@ QVector3D Barrel::getLocation() {
 }
 
 void Barrel::move() {
-    if (location.y() <= 0 || hasCollided())
-        isFalling = false;
-    else {
+    if (location.y() > 0 && !hasCollided()) {
         location.setY(location.y() - fallingSpeed);
         hitbox->update(QVector3D(location.x()-sideSize, location.y()+size, location.z()-sideSize),
                        QVector3D(location.x()+sideSize, location.y(), location.z()+sideSize));

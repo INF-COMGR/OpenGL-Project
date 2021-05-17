@@ -27,6 +27,15 @@ void BarrelView::addHitBox(HitBox* hitbox) {
 
 void BarrelView::draw(bool isWireframe)
 {
+    if (barrel->getHitBox()->getHitByBullet())
+        barrel->getHitBox()->setInvalid();
+    if (!this->getHitBox()->getHitByBullet())
+        drawBarrel(isWireframe);
+    else
+        drawExplosion(isWireframe);
+}
+
+void BarrelView::drawBarrel(bool isWireframe) {
     glPushMatrix();
     int size = barrel->getSize();
     float alpha = size/4.0f;
@@ -35,9 +44,9 @@ void BarrelView::draw(bool isWireframe)
     bool textureForLid = false;
     QVector3D location = barrel->getLocation();
 
-    if (barrel->getFalling()) {
+    if (barrel->getFalling())
         barrel->move();
-    }
+
 
     glTranslated(location.x(), location.y(), location.z());
     QVector3D normal;
@@ -133,6 +142,10 @@ void BarrelView::draw(bool isWireframe)
     glEnd();
 
     glPopMatrix();
+}
+
+void BarrelView::drawExplosion(bool isWireframe) {
+
 }
 
 void BarrelView::initTextures() {

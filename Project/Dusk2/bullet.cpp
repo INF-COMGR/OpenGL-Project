@@ -6,6 +6,7 @@ Bullet::Bullet(QVector3D location, QVector3D flyingDirection):
 {
     this->location.setY(this->location.y()-0.3);
     this->hitboxes = QVector<HitBox*>();
+    isCollided = false;
 }
 
 bool Bullet::getCollided() {
@@ -36,8 +37,10 @@ void Bullet::addHitBox(HitBox* hitbox) {
 
 bool Bullet::hasCollided() {
     for (int i = 0; i < hitboxes.length(); ++i) {
-        if (hitboxes[i]->isPointInside(location))
+        if (hitboxes[i]->isPointInside(location)) {
+            hitboxes[i]->setHitByBullet();
             return true;
+        }
     }
     return false;
 }
