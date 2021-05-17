@@ -52,18 +52,11 @@ void WallView::draw(bool isWireframe) {
     if (!isWireframe)
         addTexture();
 
-//    glColor4f((blue)/255.0f,
-//              (green)/255.0f,
-//              (blue)/255.0f,
-//              1.0f);
     float mcolor[] = { blue/255.0f, (green)/255.0f, (blue)/255.0f, 1.0f };
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mcolor);
 
     glEnable(GL_NORMALIZE);
-//    QVector3D normal = getNormal(bottomLeft, bottomRight, topRight);
-//    glNormal3f(normal[0], normal[1], normal[2]);
     glBegin(!isWireframe ? GL_QUADS : GL_LINE_LOOP);
-        //glNormal3f(1.0, 1.0, 1.0);
         glTexCoord2d( 0.0, 5.0 );
         glVertex3f(x1,y1,z1);
         glTexCoord2d( 0.0, 0.0 );
@@ -73,7 +66,6 @@ void WallView::draw(bool isWireframe) {
         glTexCoord2d( 2.5, 5.0);
         glVertex3f(x4,y4,z4);
     glEnd();
-//    glColor4f(1, 1, 1, 1);
 }
 
 void WallView::addTexture() {
