@@ -1,12 +1,20 @@
 #ifndef INSTANCEGRASS_H
 #define INSTANCEGRASS_H
-#include <QWidget>
+#include <QOpenGLWidget>
+#include <QOpenGLBuffer>
+#include <QOpenGLVertexArrayObject>
 
-class InstanceGrass : public QWidget
+class QOpenGLShaderProgram;
+
+class InstanceGrass : public QOpenGLWidget
 {
 public:
     InstanceGrass();
-    void test1();
+    void draw();
+    // OpenGL State Information
+     QOpenGLBuffer m_vertex;
+     QOpenGLVertexArrayObject m_object;
+     QOpenGLShaderProgram *m_program;
 };
 
 #endif // INSTANCEGRASS_H

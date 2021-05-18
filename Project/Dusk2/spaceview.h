@@ -6,6 +6,7 @@
 #include <QSoundEffect>
 #include "picking.h"
 
+
 class ShotgunView;
 class CameraView;
 class BarrelView;

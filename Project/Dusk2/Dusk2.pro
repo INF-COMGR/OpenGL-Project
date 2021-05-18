@@ -8,6 +8,7 @@ CONFIG += c++11
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+
 SOURCES += \
     barrel.cpp \
     barrelview.cpp \
@@ -27,10 +28,12 @@ SOURCES += \
     shotgun.cpp \
     shotgunview.cpp \
     spaceview.cpp \
+    texture.cpp \
     wall.cpp \
     wallview.cpp
 
 HEADERS += \
+    Vertex.h \
     barrel.h \
     barrelview.h \
     bullet.h \
@@ -39,6 +42,8 @@ HEADERS += \
     cameraview.h \
     floor.h \
     floorview.h \
+    glfw-3.3.4.bin.MACOS 2/include/GLFW/glfw3.h \
+    glfw-3.3.4.bin.MACOS 2/include/GLFW/glfw3native.h \
     hitbox.h \
     instancegrass.h \
     picking.h \
@@ -49,6 +54,7 @@ HEADERS += \
     shotgunview.h \
     spaceview.h \
     stb_image.h \
+    texture.h \
     util.h \
     wall.h \
     wallview.h

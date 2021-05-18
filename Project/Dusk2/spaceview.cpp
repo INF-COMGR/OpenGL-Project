@@ -15,10 +15,19 @@
 #include <QDesktopWidget>
 #include <QTextStream>
 #include <Qt3DRender/QShaderProgram>
+
 #include <QOpenGLShaderProgram>
 
 
+
 SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) {
+//    QSurfaceFormat format;
+//    format.setVersion(3,3);
+//    format.setProfile(QSurfaceFormat::CoreProfile);
+//    format.setOption(QSurfaceFormat::DeprecatedFunctions);
+//    this->setFormat(format);
+
+
     timer = new QTimer();
     connect( timer, SIGNAL(timeout()), this, SLOT(update()) );
 
@@ -49,6 +58,24 @@ SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) 
  * @brief SpaceView::initializeGL
  */
 void SpaceView::initializeGL () {
+    // Initialise GLFW
+//    if( !glfwInit() ) {
+//        fprintf( stderr, "Failed to initialize GLFW\n" );
+//        getchar();
+//        return ;
+//    }
+
+//    // Configure GLFW
+//    glfwDefaultWindowHints(); // optional, the current window hints are already the default
+//    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
+//    //glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+//    glfwWindowHint(GLFW_SAMPLES, 4);
+//    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+//    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+//    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+//    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+
     setMouseTracking(true);
     QOpenGLWidget::initializeGL();
 
@@ -159,7 +186,10 @@ void SpaceView::paintGL () {
         if (bulletView != nullptr)
             bulletView->draw(isWireframe);
         //shaders();
-        InstanceGrass* test = new InstanceGrass();
+
+        InstanceGrass* grass = new InstanceGrass();
+        grass->draw();
+
     glPopMatrix( );
 }
 
@@ -226,49 +256,6 @@ bool SpaceView::gotAllBarrels() {
     return true;
 }
 
-void SpaceView::shaders() {
-    QOpenGLShaderProgram program(this);
-    program.addShaderFromSourceCode(QOpenGLShader::Vertex,
-        "attribute highp vec4 vertex;\n"
-        "uniform highp mat4 matrix;\n"
-        "void main(void)\n"
-        "{\n"
-        "   gl_Position = matrix * vertex;\n"
-        "}");
-    program.addShaderFromSourceCode(QOpenGLShader::Fragment,
-        "uniform mediump vec4 color;\n"
-        "void main(void)\n"
-        "{\n"
-        "   gl_FragColor = color;\n"
-        "}");
 
-    program.link();
-    program.bind();
-
-    QMatrix4x4 pmvMatrix;
-    pmvMatrix.ortho(rect());
-
-
-    int vertexLocation = program.attributeLocation("vertex");
-    int matrixLocation = program.uniformLocation("matrix");
-    int colorLocation = program.uniformLocation("color");
-    static GLfloat const triangleVertices[] = {
-        -1.0f, -1.0f, 0.0f,
-        1.0f, -1.0f, 0.0f,
-        0.0f,  1.0f, 0.0f
-    };
-
-    QColor color(255, 0, 0, 255);
-
-    program.enableAttributeArray(vertexLocation);
-    program.setAttributeArray(vertexLocation, triangleVertices, 3);
-    program.setUniformValue(matrixLocation, pmvMatrix);
-    program.setUniformValue(colorLocation, color);
-
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-
-    program.disableAttributeArray(vertexLocation);
-    program.release();
-}
 
 

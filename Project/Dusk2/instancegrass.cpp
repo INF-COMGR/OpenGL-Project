@@ -3,134 +3,74 @@
 #include <QOpenGLShaderProgram>
 #include <QTextStream>
 
+
+#include "vertex.h"
+
+// Create a colored triangle
+static const Vertex sg_vertexes[] = {
+  Vertex( QVector3D( 0.00f,  0.75f, 1.0f), QVector3D(1.0f, 0.0f, 0.0f) ),
+  Vertex( QVector3D( 0.75f, -0.75f, 1.0f), QVector3D(0.0f, 1.0f, 0.0f) ),
+  Vertex( QVector3D(-0.75f, -0.75f, 1.0f), QVector3D(0.0f, 0.0f, 1.0f) )
+};
+
 InstanceGrass::InstanceGrass()
 {
-    float quadVertices[] = {
-        // positions     // colors
-        -0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
-         0.05f, -0.05f,  0.0f, 1.0f, 0.0f,
-        -0.05f, -0.05f,  0.0f, 0.0f, 1.0f,
+   // QTextStream out(stdout);
+    const GLubyte* temp =  glGetString(GL_VERSION);
+    const GLubyte* temp2 =  glGetString(GL_SHADING_LANGUAGE_VERSION);
 
-        -0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
-         0.05f, -0.05f,  0.0f, 1.0f, 0.0f,
-         0.05f,  0.05f,  0.0f, 1.0f, 1.0f
-    };
-    test1();
+    // Create Shader (Do not release until VAO is created)
+     m_program = new QOpenGLShaderProgram();
+     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex,
+                                        "#version 300 core\n"
+            "void main()"
+           " {"
+             "  gl_Vertex.x += gl_InstanceID;"
+             "  gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
+           " }"
+    );
+     m_program->addShaderFromSourceCode(QOpenGLShader::Fragment,
+                                        "#version 300 core\n"
+            " void main()"
+            "{"
+              "  gl_FragColor = vec4(0.4,0.4,0.8,1.0);"
+            "}"
+     );
+     m_program->link();
+     m_program->bind();
+
+     // Create Buffer (Do not release until VAO is created)
+     m_vertex.create();
+     m_vertex.bind();
+     m_vertex.setUsagePattern(QOpenGLBuffer::StaticDraw);
+     m_vertex.allocate(sg_vertexes, sizeof(sg_vertexes));
+
+     // Create Vertex Array Object
+     m_object.create();
+     m_object.bind();
+     m_program->enableAttributeArray(0);
+     m_program->enableAttributeArray(1);
+     m_program->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), Vertex::PositionTupleSize, Vertex::stride());
+     m_program->setAttributeBuffer(1, GL_FLOAT, Vertex::colorOffset(), Vertex::ColorTupleSize, Vertex::stride());
+
+     // Release (unbind) all
+     m_object.release();
+     m_vertex.release();
+     m_program->release();
 }
 
-void InstanceGrass::test1() {
-    QTextStream out(stdout);
-    const GLubyte* temp = glGetString(GL_VERSION);
-    const GLubyte* temp2 = glGetString( GL_SHADING_LANGUAGE_VERSION );
-    QOpenGLShaderProgram program(this);
-    program.addShaderFromSourceCode(QOpenGLShader::Vertex,
-        "attribute highp vec4 vertex;\n"
-        "uniform highp mat4 matrix;\n"
-        "void main(void)\n"
-        "{\n"
-        "   gl_Vertex.x += gl_InstanceID;\n"
-        "   gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n"
-        "}");
-    program.addShaderFromSourceCode(QOpenGLShader::Fragment,
-        "uniform mediump vec4 color;\n"
-        "void main(void)\n"
-        "{\n"
-        "   gl_FragColor = color;\n"
-        "}");
+void InstanceGrass::draw() {
+    glPushMatrix();
+        glTranslated(2,2,0);
+        // Render using our shader
+        m_program->bind();
+        {
+          m_object.bind();
 
-    program.link();
-    program.bind();
+          glDrawArraysInstancedARB(GL_TRIANGLES, 0, sizeof(sg_vertexes) / sizeof(sg_vertexes[0]), 100);
+          m_object.release();
+        }
+        m_program->release();
+    glPopMatrix();
 
-    QMatrix4x4 pmvMatrix;
-    pmvMatrix.ortho(rect());
-
-
-    int vertexLocation = program.attributeLocation("vertex");
-    int matrixLocation = program.uniformLocation("matrix");
-    int colorLocation = program.uniformLocation("color");
-    static GLfloat const triangleVertices[] = {
-        0.0f,  0.0f,  2.0f,
-        10.0f, 10.0f, 2.0f,
-        5.0f,  10.0f, 2.0f
-    };
-
-    QColor color(255, 0, 0, 255);
-
-    program.enableAttributeArray(vertexLocation);
-    program.setAttributeArray(vertexLocation, triangleVertices, 3);
-    program.setUniformValue(matrixLocation, pmvMatrix);
-    program.setUniformValue(colorLocation, color);
-
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 3, 30);
-
-    program.disableAttributeArray(vertexLocation);
-    program.release();
 }
-
-//void InstanceGrass::test() {
-//    static GLfloat wall [] = {
-//            (float) x1, (float) y1, (float) z1,
-//            (float) x2, (float) y2, (float) z2,
-//            (float) x3, (float) y3, (float) z3,
-//            (float) x4, (float) y4, (float) z4
-//        };
-
-//        static GLfloat color [] = {
-//            1.0f, 0.0f, 0.0f, 1.0f
-//        };
-
-//        static GLfloat texCoords [] {
-//            1.0f, 1.0f,
-//            1.0f, 0.0f,
-//            0.0f, 0.0f,
-//             0.0f, 1.0f
-
-//        };
-//        QOpenGLTexture* m_texture = new QOpenGLTexture( QImage( QCoreApplication::applicationDirPath() + "/../../../../Dusk2/wall.jpg") );
-//        QOpenGLShaderProgram program(this);
-
-//        program.addShaderFromSourceCode(QOpenGLShader::Vertex,
-//            "attribute highp vec4 vertex;\n"
-//            "attribute highp vec4 texCoord;\n"
-//            "uniform mediump mat4 matrix;\n"
-//            "varying highp vec4 texc;\n"
-
-//            "void main(void)\n"
-//            "{\n"
-//                "gl_Position = ftransform();"
-//                "texc = texCoord;"
-//            "}");
-
-//        program.addShaderFromSourceCode(QOpenGLShader::Fragment,
-//            "varying highp vec4 texc;\n"
-//            "uniform sampler2D tex;\n"
-
-//            "void main(void)\n"
-//            "{\n"
-//            "   highp vec3 color = texture2D( tex, texc.st ).rgb;\n"
-//            "   color = color * 0.2 + color * 0.8;\n"
-//            "   gl_FragColor = vec4( clamp( color, 0.0, 1.0 ), 1.0 );\n"
-//            "}");
-
-//        program.link();
-//        program.bind();
-
-//        int vertexLocation = program.attributeLocation("vertex");
-//        int textCoord = program.uniformLocation("texCoord");
-//        int textUniform = program.uniformLocation("tex");
-
-//        addTexture();
-//        program.setAttributeArray(vertexLocation, wall, 3);
-//        program.setAttributeArray(textCoord, texCoords, 2);
-//        program.setUniformValue(textUniform, 0);
-
-//        program.enableAttributeArray(vertexLocation);
-//        program.enableAttributeArray(textCoord);
-
-//        glDrawArrays(GL_QUADS, 0, 4);
-//        program.disableAttributeArray(vertexLocation);
-//        program.disableAttributeArray(textCoord);
-
-//        program.release();
-
-//}

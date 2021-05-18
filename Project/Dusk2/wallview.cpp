@@ -5,6 +5,7 @@
 //#include <iostream>
 #include "hitbox.h"
 #include "stb_image.h"
+#include "texture.h"
 
 #define highp
 #define mediump
@@ -16,7 +17,8 @@ WallView::WallView(double x1, double y1, double z1, double x2, double y2, double
     this->red = red;
     this->green = green;
     this->blue = blue;
-    initTextures();
+    texture = new Texture("wall.jpg");
+    //initTextures();
 }
 
 WallView::WallView(Wall* wall, float red, float green, float blue, DIRECTION direction) {
@@ -24,7 +26,8 @@ WallView::WallView(Wall* wall, float red, float green, float blue, DIRECTION dir
     this->red = red;
     this->green = green;
     this->blue = blue;
-    initTextures();
+    //initTextures();
+    texture = new Texture("wall.jpg");
 }
 
 void WallView::draw(bool isWireframe) {
@@ -49,7 +52,7 @@ void WallView::draw(bool isWireframe) {
     double z4 = topLeft[2];
 
     if (!isWireframe)
-        addTexture();
+        texture->bindTexture();
 
     float mcolor[] = { blue/255.0f, (green)/255.0f, (blue)/255.0f, 1.0f };
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mcolor);
@@ -70,6 +73,8 @@ void WallView::draw(bool isWireframe) {
         glVertex3f(x4,y4,z4);
     glEnd();
 
+    texture->unBindTexture();
+
 
 }
 
@@ -77,8 +82,8 @@ void WallView::initTextures() {
     QString path{QCoreApplication::applicationDirPath() + "/../../../../Dusk2/wall.jpg"};
     //std::cout << " " << path.toStdString() << " ";
     image = stbi_load(path.toStdString().c_str(), &width, &height, &nrChannels, 0);
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
 
     if (image != NULL) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -100,7 +105,7 @@ void WallView::initTextures() {
 
 void WallView::addTexture() {
     glEnable( GL_TEXTURE_2D );
-    glBindTexture( GL_TEXTURE_2D , texture );
+    glBindTexture( GL_TEXTURE_2D , textureID );
 }
 
 HitBox* WallView::getHitBox() {
