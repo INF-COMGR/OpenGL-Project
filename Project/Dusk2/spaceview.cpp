@@ -26,6 +26,15 @@ SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) 
 //    format.setProfile(QSurfaceFormat::CoreProfile);
 //    format.setOption(QSurfaceFormat::DeprecatedFunctions);
 //    this->setFormat(format);
+//    QSurfaceFormat format;
+//    format.setDepthBufferSize( 24 );
+//    format.setMajorVersion( 4 );
+//    format.setMinorVersion( 3 );
+//    format.setSamples( 4 );
+//    format.setProfile( QSurfaceFormat::CoreProfile );
+//    format.setOption(QSurfaceFormat::DeprecatedFunctions);
+//    setFormat( format );
+//    create();
 
 
     timer = new QTimer();
@@ -185,7 +194,7 @@ void SpaceView::paintGL () {
         this->roomView->draw(isWireframe);
         if (bulletView != nullptr)
             bulletView->draw(isWireframe);
-        //shaders();
+
 
         InstanceGrass* grass = new InstanceGrass();
         grass->draw();

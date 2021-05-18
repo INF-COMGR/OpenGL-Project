@@ -4,20 +4,14 @@
 #include <QVector3D>
 class Barrel;
 class HitBox;
+class Texture;
 
 class BarrelView
 {
 private:
     Barrel* barrel;
-    void addTexture(bool forBody);
-    void initTextures();
-    unsigned int textureSide;
-    int widthSide, heightSide, nrChannelsSide;
-    unsigned char* imageSide;
-
-    unsigned int textureTop;
-    int widthTop, heightTop, nrChannelsTop;
-    unsigned char* imageTop;
+    Texture* textureBody;
+    Texture* textureLid;
 
     void drawBarrel(bool isWireframe);
     void drawExplosion(bool isWireframe);

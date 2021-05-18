@@ -2,12 +2,13 @@
 #include <QSurfaceFormat>
 
 ShootApplication::ShootApplication(QWidget *parent) : QMainWindow {parent} {
-    QSurfaceFormat format;
+//    QSurfaceFormat format;
 //    format.setDepthBufferSize(24);
 //    format.setStencilBufferSize(8);
 //    format.setVersion(4, 1);
 //    format.setProfile(QSurfaceFormat::CoreProfile);
 //    format.setOption(QSurfaceFormat::DeprecatedFunctions);
+//    view.makeCurrent();
 //    QSurfaceFormat::setDefaultFormat(format);
 //    view.setFormat(format);
 

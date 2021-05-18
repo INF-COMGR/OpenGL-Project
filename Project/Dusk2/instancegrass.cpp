@@ -2,7 +2,8 @@
 #include "util.h"
 #include <QOpenGLShaderProgram>
 #include <QTextStream>
-
+//#include <QtOpenGLExtensions/QOpenGLExtensions>
+//#include <QOpenGLExtensions>
 
 #include "vertex.h"
 
@@ -22,15 +23,13 @@ InstanceGrass::InstanceGrass()
     // Create Shader (Do not release until VAO is created)
      m_program = new QOpenGLShaderProgram();
      m_program->addShaderFromSourceCode(QOpenGLShader::Vertex,
-                                        "#version 300 core\n"
             "void main()"
            " {"
-             "  gl_Vertex.x += gl_InstanceID;"
              "  gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
            " }"
     );
      m_program->addShaderFromSourceCode(QOpenGLShader::Fragment,
-                                        "#version 300 core\n"
+
             " void main()"
             "{"
               "  gl_FragColor = vec4(0.4,0.4,0.8,1.0);"

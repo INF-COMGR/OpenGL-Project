@@ -13,13 +13,6 @@ public:
     HitBox* getHitBox();
 private:
     Texture* texture;
-    void initTextures();
-    unsigned int textureID;
-    int width, height, nrChannels;
-    unsigned char* image;
-    void addTexture();
-    void shadersTest();
-
     Wall* wall;
     float red, green, blue;
 };

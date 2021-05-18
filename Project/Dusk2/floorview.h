@@ -1,6 +1,7 @@
 #ifndef FLOORVIEW_H
 #define FLOORVIEW_H
 #include "floor.h"
+class Texture;
 
 class FloorView
 {
@@ -10,12 +11,7 @@ public:
     void draw(bool isWirefram = false);
     HitBox* getHitBox();
 private:
-    void initTextures();
-    unsigned int texture;
-    int width, height, nrChannels;
-    unsigned char* image;
-    void addTexture();
-
+    Texture* texture;
     Floor* floor;
     float red, green, blue;
 };
