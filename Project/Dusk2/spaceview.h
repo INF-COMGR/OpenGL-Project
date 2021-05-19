@@ -35,6 +35,7 @@ private:
     RoomView* roomView;
     BulletView* bulletView;
     Cube* littleWall1;
+    Cube* littleWall2;
     button* giveUpButton;
     button* restartButton;
     AnimationView* animationView;

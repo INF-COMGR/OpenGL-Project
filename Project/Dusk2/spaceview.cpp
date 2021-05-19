@@ -79,6 +79,7 @@ SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) 
 void SpaceView::initBarrels()
 {
     this->littleWall1 = new Cube(25,0,10, 26,7,30);
+    this->littleWall2 = new Cube(0,0,30, 20,4,29.9f);
     this->barrels.append(new BarrelView(1, QVector3D(2, 7, 2)));        //small barrel (size 1) on top of big barrel begin view
     this->barrels.append(new BarrelView(2, QVector3D(2, 4, 2)));        //big barrel (size 2) under small barrel begin view
     this->barrels.append(new BarrelView(5, QVector3D(10, 10, 10)));     //giant barrel (size 5) to the side
@@ -86,13 +87,19 @@ void SpaceView::initBarrels()
     this->barrels.append(new BarrelView(2, QVector3D(10, 40, 10)));     //small barrel 2 (size 2) on top of giant barrel
     this->barrels.append(new BarrelView(1, QVector3D(10, 50, 10)));     //small barrel 3 (size 1) on top of giant barrel
 
-    this->barrels.append(new BarrelView(2, QVector3D(30, 40, 20)));
+    this->barrels.append(new BarrelView(2, QVector3D(35, 40, 20)));
     this->barrels.append(new BarrelView(2, QVector3D(20, 35, 30)));
 
     this->barrels.append(new BarrelView(1, QVector3D(35, 10, 25)));
     this->barrels.append(new BarrelView(1, QVector3D(25, 15, 35)));
 
     this->barrels.append(new BarrelView(3, QVector3D(25, 20, 20)));
+    this->barrels.append(new BarrelView(5, QVector3D(27, 30, 20)));
+    this->barrels.append(new BarrelView(3, QVector3D(30, 40, 20)));
+
+    this->barrels.append(new BarrelView(3, QVector3D(10, 20, 25)));
+    this->barrels.append(new BarrelView(3, QVector3D(12, 30, 25)));
+    this->barrels.append(new BarrelView(3, QVector3D(14, 40, 25)));
 
     this->barrels.append(new BarrelView(4, QVector3D(40, 30, 40)));
     this->barrels.append(new BarrelView(3, QVector3D(35, 30, 40)));
@@ -105,6 +112,7 @@ void SpaceView::initBarrels()
     for(int i = 0; i < barrels.length(); ++i) {
         barrels[i]->setFalling();
         barrels[i]->addHitBox(littleWall1->getHitbox());
+        barrels[i]->addHitBox(littleWall2->getHitbox());
         for(int j = 0; j < barrels.length(); ++j) {
             if (i != j)
                 barrels[i]->addHitBox(barrels[j]->getHitBox());
@@ -237,6 +245,7 @@ void SpaceView::paintGL () {
             barrels[i]->draw(isWireframe);
         this->roomView->draw(isWireframe);
         this->littleWall1->draw(isWireframe);
+        this->littleWall2->draw(isWireframe);
         if (bulletView != nullptr)
             bulletView->draw(isWireframe);
 
@@ -286,6 +295,7 @@ void SpaceView::mousePressEvent(QMouseEvent *e) {
         this->bulletView->addHitBox(barrels[i]->getHitBox());
     }
     this->bulletView->addHitBox(littleWall1->getHitbox());
+    this->bulletView->addHitBox(littleWall2->getHitbox());
 
 }
 
