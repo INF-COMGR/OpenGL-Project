@@ -15,6 +15,7 @@ class BulletView;
 class HitBox;
 class Cube;
 class button;
+class AnimationView;
 
 class SpaceView: public QOpenGLWidget {
 public:
@@ -36,7 +37,9 @@ private:
     Cube* littleWall1;
     button* giveUpButton;
     button* restartButton;
-
+    AnimationView* animationView;
+    AnimationView* animationView2;
+    AnimationView* animationView3;
     void keyPressEvent(QKeyEvent * e);
     void mouseMoveEvent(QMouseEvent* e);
     void mousePressEvent(QMouseEvent* e);
@@ -67,5 +70,6 @@ private:
 
     void restart();
     void lose();
+    void initBarrels();
 };
 #endif // SPACEVIEW_H

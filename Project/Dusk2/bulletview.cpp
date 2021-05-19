@@ -4,15 +4,17 @@
 #include "hitbox.h"
 #include "texture.h"
 
-BulletView::BulletView(QVector3D location, QVector3D flyingDirection)
+BulletView::BulletView(QVector3D location, QVector3D flyingDirection, bool isBullet, QVector3D fallingDirection)
 {
-    bullet = new Bullet(location, flyingDirection);
+    bullet = new Bullet(location, flyingDirection, fallingDirection, isBullet);
     texture = new Texture("bullet.jpeg");
 }
 
 void BulletView::draw(bool isWireframe) {
 
-    float mcolor[] = { 1.0f,1.0f, 1.0f, 1.0f };
+    float mcolor[] = { 1.0f, bullet->getIsBullet() ? 0.0f : 1.0f, bullet->getIsBullet() ? 0.0f : 1.0f, 1.0f };
+    //if ()
+        //mcolor = { 1.0f,0.5f,0.5f, 1.0f };
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mcolor);
 
     glEnable(GL_NORMALIZE);
@@ -52,4 +54,8 @@ void BulletView::draw(bool isWireframe) {
 
 void BulletView::addHitBox(HitBox* hitbox) {
     bullet->addHitBox(hitbox);
+}
+
+bool BulletView::shouldDelete() {
+    return false;//this->bullet->getCollided();
 }

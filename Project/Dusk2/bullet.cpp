@@ -1,8 +1,8 @@
 #include "bullet.h"
 #include "hitbox.h"
 
-Bullet::Bullet(QVector3D location, QVector3D flyingDirection):
-    location{location}, flyingDirection{flyingDirection}
+Bullet::Bullet(QVector3D location, QVector3D flyingDirection, QVector3D fallingDirection, bool isBullet):
+    location{location}, flyingDirection{flyingDirection}, fallingDirection{fallingDirection}, isBullet{isBullet}
 {
     this->location.setY(this->location.y()-0.3);
     this->hitboxes = QVector<HitBox*>();
@@ -14,17 +14,26 @@ bool Bullet::getCollided() {
 }
 
 void Bullet::update() {
-    if (hasCollided()) {
-        isCollided = true;
-    } else {
+    if (!hasCollided())
         move();
-    }
+
 }
 
 void Bullet::move() {
-    location.setX(location.x()+flyingDirection.x());
-    location.setY(location.y()+flyingDirection.y());
-    location.setZ(location.z()+flyingDirection.z());
+    if (!isCollided && location.y() > 0) {
+        flyingDirection.setX(flyingDirection.x()+fallingDirection.x());
+        flyingDirection.setY(flyingDirection.y()+fallingDirection.y());
+        flyingDirection.setZ(flyingDirection.z()+fallingDirection.z());
+
+        location.setX(location.x()+flyingDirection.x());
+        location.setY(location.y()+flyingDirection.y());
+        location.setZ(location.z()+flyingDirection.z());
+    }
+}
+
+bool Bullet::getIsBullet() const
+{
+    return isBullet;
 }
 
 QVector3D Bullet::getLocation() {
@@ -38,7 +47,8 @@ void Bullet::addHitBox(HitBox* hitbox) {
 bool Bullet::hasCollided() {
     for (int i = 0; i < hitboxes.length(); ++i) {
         if (hitboxes[i]->isPointInside(location)) {
-            hitboxes[i]->setHitByBullet();
+            if (isBullet)
+                hitboxes[i]->setHitByBullet();
             return true;
         }
     }

@@ -3,10 +3,12 @@
 #include "util.h"
 #include <QCoreApplication>
 #include <QTextStream>
+#include <QRandomGenerator>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "hitbox.h"
 #include "texture.h"
+#include "bulletview.h"
 
 BarrelView::BarrelView(int size, QVector3D location)
 {
@@ -31,10 +33,15 @@ void BarrelView::draw(bool isWireframe)
 {
     if (barrel->getHitBox()->getHitByBullet())
         barrel->getHitBox()->setInvalid();
+
     if (!this->getHitBox()->getHitByBullet())
         drawBarrel(isWireframe);
-    else
+    else {
+        if (!shrapnelCreated)
+            initShrapnel();
+        shrapnelCreated = true;
         drawExplosion(isWireframe);
+    }
 }
 
 void BarrelView::drawBarrel(bool isWireframe) {
@@ -48,7 +55,6 @@ void BarrelView::drawBarrel(bool isWireframe) {
         barrel->move();
 
     glTranslated(location.x(), location.y(), location.z());
-    QVector3D normal;
 
     // Bottom
 
@@ -137,6 +143,29 @@ void BarrelView::drawBarrel(bool isWireframe) {
     glPopMatrix();
 }
 
-void BarrelView::drawExplosion(bool isWireframe) {
+void BarrelView::initShrapnel() {
+    bulletAmount = 10;
+    for (int i = 0; i < bulletAmount; ++i) {
+        double x = (QRandomGenerator::global()->generateDouble()-0.5)/5;
+        double y = (QRandomGenerator::global()->generateDouble())/5;
+        double z = (QRandomGenerator::global()->generateDouble()-0.5)/5;
+        QVector3D flyingDirection = QVector3D(x, y, z);
+        QVector3D location = barrel->getLocation();
+        location.setY(location.y()+this->barrel->getSize());
+        shrapnel.append(new BulletView(location, flyingDirection, false));
+        QVector<HitBox*> otherHitboxes = barrel->getHitBoxes();
+        for (int j = 0; j < otherHitboxes.length(); ++j) {
+            shrapnel[i]->addHitBox(otherHitboxes[j]);
+        }
+    }
+}
 
+void BarrelView::drawExplosion(bool isWireframe) {
+    for (int i = 0; i < shrapnel.length(); ++i) {
+        if (shrapnel[i]->shouldDelete())
+            shrapnel.remove(i);
+        else
+            shrapnel[i]->draw(isWireframe);
+
+    }
 }

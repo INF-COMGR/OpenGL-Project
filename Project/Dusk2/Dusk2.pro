@@ -11,6 +11,8 @@ CONFIG += c++11
 
 
 SOURCES += \
+    animation.cpp \
+    animationview.cpp \
     barrel.cpp \
     barrelview.cpp \
     bullet.cpp \
@@ -37,6 +39,8 @@ SOURCES += \
 
 HEADERS += \
     Vertex.h \
+    animation.h \
+    animationview.h \
     barrel.h \
     barrelview.h \
     bullet.h \

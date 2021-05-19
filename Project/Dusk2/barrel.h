@@ -18,6 +18,7 @@ public:
     bool getFalling();
 
     HitBox* getHitBox();
+    QVector<HitBox*> getHitBoxes();
     void addHitBox(HitBox* hitbox);
 private:
     bool isFalling;
