@@ -1,6 +1,7 @@
 #include "cube.h"
 #include "util.h"
 #include "texture.h"
+#include "hitbox.h"
 Cube::Cube(double x1, double y1, double z1, double x2, double y2, double z2)
 {
     this->x1 = x1;
@@ -10,6 +11,7 @@ Cube::Cube(double x1, double y1, double z1, double x2, double y2, double z2)
     this->y2 = y2;
     this->z2 = z2;
     this->texture = new Texture("littleWall2.jpg");
+    this->hitbox = new HitBox(QVector3D{(float)x1, (float)y2, (float)z1}, QVector3D{(float)x2, (float)y1, (float)z2});
 
 }
 
@@ -86,4 +88,14 @@ void Cube::draw(bool isWireframe) {
 
     glEnd();
     texture->unBindTexture();
+}
+
+HitBox *Cube::getHitbox() const
+{
+    return hitbox;
+}
+
+void Cube::setHitbox(HitBox *value)
+{
+    hitbox = value;
 }

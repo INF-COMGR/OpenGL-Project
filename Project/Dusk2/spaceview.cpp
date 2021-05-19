@@ -102,7 +102,7 @@ void SpaceView::initializeGL () {
 
     //Init models with textures & logic
     this->roomView = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
-    this->littleWall1 = new Cube(25,0,10, 26,10,30);
+    this->littleWall1 = new Cube(25,0,10, 26,7,30);
 
     restartButton = new button(QVector4D{0.0,1.0,0.0,1.0}, 2, 1, 20);
     giveUpButton = new button(QVector4D{1.0,0.0,0.0,1.0}, 2, 3, 20);
@@ -272,6 +272,7 @@ void SpaceView::mousePressEvent(QMouseEvent *e) {
     for (int i = 0; i < barrels.length(); ++i) {
         this->bulletView->addHitBox(barrels[i]->getHitBox());
     }
+    this->bulletView->addHitBox(littleWall1->getHitbox());
 
 }
 
