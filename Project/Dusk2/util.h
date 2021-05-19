@@ -8,7 +8,6 @@
 class Util
 {
 public:
-
     static void drawSolidSphere(GLdouble radius, GLint slices, GLint stacks)
     {
       GLUquadricObj* quadric = gluNewQuadric();

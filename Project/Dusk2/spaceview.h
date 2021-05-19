@@ -56,5 +56,6 @@ private:
     void shaders();
 
     void restart();
+    void initBarrels();
 };
 #endif // SPACEVIEW_H

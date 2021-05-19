@@ -40,7 +40,7 @@ private:
     float camPosx,camPosy,camPosz;
     float camUpx,camUpy,camUpz;
     float camViewx,camViewy,camViewz;
-    float speed = 0.3f;
+    float speed = 1.0f;
     float cameraHeight = 2.0f;
     QVector2D oldMousePosition;
     bool flying;

@@ -67,6 +67,34 @@ SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) 
  *
  * @brief SpaceView::initializeGL
  */
+void SpaceView::initBarrels()
+{
+    this->barrels.append(new BarrelView(1, QVector3D(2, 7, 2)));        //small barrel (size 1) on top of big barrel begin view
+    this->barrels.append(new BarrelView(2, QVector3D(2, 4, 2)));        //big barrel (size 2) under small barrel begin view
+    this->barrels.append(new BarrelView(5, QVector3D(10, 10, 10)));     //giant barrel (size 5) to the side
+    this->barrels.append(new BarrelView(1, QVector3D(10, 30, 10)));     //small barrel 1 (size 1) on top of giant barrel
+    this->barrels.append(new BarrelView(1, QVector3D(10, 40, 10)));     //small barrel 2 (size 1) on top of giant barrel
+    this->barrels.append(new BarrelView(1, QVector3D(10, 50, 10)));     //small barrel 3 (size 1) on top of giant barrel
+
+    this->barrels.append(new BarrelView(2, QVector3D(30, 40, 20)));
+    this->barrels.append(new BarrelView(2, QVector3D(20, 35, 30)));
+
+    this->barrels.append(new BarrelView(1, QVector3D(35, 10, 25)));
+    this->barrels.append(new BarrelView(1, QVector3D(25, 15, 35)));
+
+    for(int i = 0; i < barrels.length(); ++i) {
+        barrels[i]->setFalling();
+        for(int j = 0; j < barrels.length(); ++j) {
+            if (i != j)
+                barrels[i]->addHitBox(barrels[j]->getHitBox());
+        }
+        QVector<HitBox*> roomHitboxes = roomView->getHitBoxes();
+        for (int i = 0; i < roomHitboxes.length(); ++i) {
+            barrels[i]->addHitBox(roomHitboxes[i]);
+        }
+    }
+}
+
 void SpaceView::initializeGL () {
     // Initialise GLFW
 //    if( !glfwInit() ) {
@@ -115,28 +143,10 @@ void SpaceView::initializeGL () {
     this->shotgunView = new ShotgunView();
     QVector<QVector2D> texCoords1 = QVector<QVector2D>{QVector2D(1, 1), QVector2D(0, 1), QVector2D(1, 0), QVector2D(2, 0)};
     this->animationView = new AnimationView(2, QVector3D(10, 0, 3), "/88e20d896a9dd096579be10db88496f1-0/88e20d896a9dd096579be10db88496f1-", 53, texCoords1);
-    this->animationView2 = new AnimationView(4, QVector3D(15, 0, 3), "/1pX9-0/1pX9-", 46, texCoords1);
+    QVector<QVector2D> texCoords2 = QVector<QVector2D>{QVector2D(1, 1), QVector2D(0, 1), QVector2D(1, 0), QVector2D(0, 0)};
+    this->animationView2 = new AnimationView(4, QVector3D(15, 0, 3), "/1pX9-0/1pX9-", 46, texCoords2);
 
-    this->barrels.append(new BarrelView(1, QVector3D(2, 7, 2)));        //small barrel (size 1) on top of big barrel begin view
-    this->barrels.append(new BarrelView(2, QVector3D(2, 4, 2)));        //big barrel (size 2) under small barrel begin view
-    this->barrels.append(new BarrelView(5, QVector3D(10, 10, 10)));     //giant barrel (size 5) to the side
-    this->barrels.append(new BarrelView(1, QVector3D(10, 30, 10)));     //small barrel 1 (size 1) on top of giant barrel
-    this->barrels.append(new BarrelView(1, QVector3D(10, 40, 10)));     //small barrel 2 (size 1) on top of giant barrel
-    this->barrels.append(new BarrelView(1, QVector3D(10, 50, 10)));     //small barrel 3 (size 1) on top of giant barrel
-
-    this->barrels.append(new BarrelView(2, QVector3D(30, 40, 20)));
-    this->barrels.append(new BarrelView(2, QVector3D(20, 35, 30)));
-
-    this->barrels.append(new BarrelView(1, QVector3D(35, 10, 25)));
-    this->barrels.append(new BarrelView(1, QVector3D(25, 15, 35)));
-
-    for(int i = 0; i < barrels.length(); ++i) {
-        barrels[i]->setFalling();
-        for(int j = 0; j < barrels.length(); ++j) {
-            if (i != j)
-                barrels[i]->addHitBox(barrels[j]->getHitBox());
-        }
-    }
+    initBarrels();
 }
 
 /**
@@ -200,6 +210,7 @@ void SpaceView::paintGL () {
         if (bulletView != nullptr)
             bulletView->draw(isWireframe);
 
+
         animationView->draw(isWireframe);
         animationView2->draw(isWireframe);
         InstanceGrass* grass = new InstanceGrass();
@@ -221,25 +232,7 @@ void SpaceView::keyPressEvent(QKeyEvent * e) {
 void SpaceView::restart() {
     penalty = 0;
     this->barrels.clear();
-    this->barrels.append(new BarrelView(1, QVector3D(2, 7, 2)));        //small barrel (size 1) on top of big barrel begin view
-    this->barrels.append(new BarrelView(2, QVector3D(2, 4, 2)));        //big barrel (size 2) under small barrel begin view
-    this->barrels.append(new BarrelView(5, QVector3D(10, 10, 10)));     //giant barrel (size 5) to the side
-    this->barrels.append(new BarrelView(1, QVector3D(10, 30, 10)));     //small barrel 1 (size 1) on top of giant barrel
-    this->barrels.append(new BarrelView(1, QVector3D(10, 40, 10)));     //small barrel 2 (size 1) on top of giant barrel
-    this->barrels.append(new BarrelView(1, QVector3D(10, 50, 10)));     //small barrel 3 (size 1) on top of giant barrel
-
-    this->barrels.append(new BarrelView(2, QVector3D(30, 40, 20)));
-    this->barrels.append(new BarrelView(2, QVector3D(20, 35, 30)));
-
-    this->barrels.append(new BarrelView(1, QVector3D(35, 10, 25)));
-    this->barrels.append(new BarrelView(1, QVector3D(25, 15, 35)));
-    for(int i = 0; i < barrels.length(); ++i) {
-        barrels[i]->setFalling();
-        for(int j = 0; j < barrels.length(); ++j) {
-            if (i != j)
-                barrels[i]->addHitBox(barrels[j]->getHitBox());
-        }
-    }
+    initBarrels();
     winningSoundPlayed = false;
 }
 
@@ -257,7 +250,6 @@ void SpaceView::mousePressEvent(QMouseEvent *e) {
     for (int i = 0; i < barrels.length(); ++i) {
         this->bulletView->addHitBox(barrels[i]->getHitBox());
     }
-
 }
 
 bool SpaceView::gotAllBarrels() {

@@ -45,6 +45,10 @@ HitBox* Barrel::getHitBox() {
     return this->hitbox;
 }
 
+QVector<HitBox*> Barrel::getHitBoxes() {
+    return this->otherHitBoxes;
+}
+
 void Barrel::addHitBox(HitBox* hitbox) {
     this->otherHitBoxes.append(hitbox);
 }
