@@ -17,6 +17,8 @@ public:
   void setPosition(const QVector3D& position);
   void setColor(const QVector3D& color);
 
+  QVector3D getColor() {return m_color;}
+
   // OpenGL Helpers
   static const int PositionTupleSize = 3;
   static const int ColorTupleSize = 3;

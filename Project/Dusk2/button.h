@@ -1,21 +1,21 @@
-#ifndef INSTANCEGRASS_H
-#define INSTANCEGRASS_H
+#ifndef BUTTON_H
+#define BUTTON_H
 #include <QOpenGLWidget>
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
+#include <QOpenGLShaderProgram>
 
-class QOpenGLShaderProgram;
-
-class InstanceGrass : public QOpenGLWidget
+class button
 {
 public:
-    InstanceGrass();
-    void draw();
+    button(QVector4D color, float x, float y, float z);
+    void draw(bool isWireframe);
 private:
     // OpenGL State Information
      QOpenGLBuffer m_vertex;
      QOpenGLVertexArrayObject m_object;
      QOpenGLShaderProgram *m_program;
+     float x, y, z;
 };
 
-#endif // INSTANCEGRASS_H
+#endif // BUTTON_H
