@@ -272,6 +272,7 @@ void SpaceView::keyPressEvent(QKeyEvent * e) {
 }
 
 void SpaceView::restart() {
+    losingSoundPlayed = false;
     gaveUp = false;
     penalty = 0;
     this->barrels.clear();
