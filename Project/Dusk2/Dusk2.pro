@@ -15,8 +15,10 @@ SOURCES += \
     barrelview.cpp \
     bullet.cpp \
     bulletview.cpp \
+    button.cpp \
     camera.cpp \
     cameraview.cpp \
+    cube.cpp \
     floor.cpp \
     floorview.cpp \
     hitbox.cpp \
@@ -39,8 +41,10 @@ HEADERS += \
     barrelview.h \
     bullet.h \
     bulletview.h \
+    button.h \
     camera.h \
     cameraview.h \
+    cube.h \
     floor.h \
     floorview.h \
     glfw-3.3.4.bin.MACOS 2/include/GLFW/glfw3.h \

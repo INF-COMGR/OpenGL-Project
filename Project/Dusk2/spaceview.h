@@ -13,6 +13,8 @@ class BarrelView;
 class RoomView;
 class BulletView;
 class HitBox;
+class Cube;
+class button;
 
 class SpaceView: public QOpenGLWidget {
 public:
@@ -31,26 +33,39 @@ private:
     ShotgunView* shotgunView;
     RoomView* roomView;
     BulletView* bulletView;
+    Cube* littleWall1;
+    button* giveUpButton;
+    button* restartButton;
+
     void keyPressEvent(QKeyEvent * e);
     void mouseMoveEvent(QMouseEvent* e);
     void mousePressEvent(QMouseEvent* e);
+    void handlePicking(QKeyEvent* e);
+    bool gotAllBarrels();
+
     const int FPS_COUNT = 1000/120; //1 sec or 1000msec / 120FPS
     bool isWireframe = false;
+    bool gaveUp = false;
 
-    bool gotAllBarrels();
     QLabel* scoreLabel;
     QLabel* explanationLabel;
     QLabel* pickingLabel;
-    const int BEGIN_SCORE = 10000;
+    QLabel* pickingBlockRestart;
+    QLabel* pickingBlockGiveUp;
+
+    const int BEGIN_SCORE = 2000;
     int penalty = 0;
     void updateScore();
 
     QSoundEffect* shotGunSound;
     QSoundEffect* winningSound;
-    bool winningSoundPlayed = false;
+    QSoundEffect* losingSound;
 
-    void shaders();
+    bool winningSoundPlayed = false;
+    bool losingSoundPlayed = false;
+
 
     void restart();
+    void lose();
 };
 #endif // SPACEVIEW_H

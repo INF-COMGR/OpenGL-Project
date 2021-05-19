@@ -7,7 +7,9 @@
 #include "shotgunview.h"
 #include "bulletview.h"
 #include "hitbox.h"
-#include "instancegrass.h"
+#include "button.h"
+#include "wallview.h"
+#include "cube.h"
 
 #include "QKeyEvent"
 #include <QApplication>
@@ -49,6 +51,8 @@ SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) 
     pickingLabel = new QLabel("\npicking output: ", this);
     explanationLabel = new QLabel("\n\nUse your mouse to move and click to shoot.\nShoot all the barrels to win!\n W - toggle wireframe | F - toggle noclip \nTo reset the game, look at the North and press R (usage off picking)", this);
     this->bulletView = nullptr;
+    pickingBlockGiveUp = new QLabel("\n\n\n\n\n\nTo give up the game, place the red block in your bottom left corner and press 'G'.", this);
+    pickingBlockGiveUp = new QLabel("\n\n\n\n\n\n\nAnother way to restart the game is to place the green block in your bottom left corner and press 'T'.", this);
 
     shotGunSound = new QSoundEffect(this);
     shotGunSound->setSource(QUrl::fromLocalFile(":/:/shotgunsound.wav"));
@@ -59,6 +63,11 @@ SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) 
     winningSound->setSource(QUrl::fromLocalFile(":/:/winningsound.wav"));
     winningSound->setLoopCount(1);
     winningSound->setVolume(0.2f);
+
+    losingSound = new QSoundEffect(this);
+    losingSound->setSource(QUrl::fromLocalFile(QCoreApplication::applicationDirPath() + "/../../../../Dusk2/lose.wav"));
+    losingSound->setLoopCount(1);
+    losingSound->setVolume(0.2f);
 }
 
 /**
@@ -67,24 +76,6 @@ SpaceView::SpaceView(QWidget *parent, bool isWireframe) : QOpenGLWidget(parent) 
  * @brief SpaceView::initializeGL
  */
 void SpaceView::initializeGL () {
-    // Initialise GLFW
-//    if( !glfwInit() ) {
-//        fprintf( stderr, "Failed to initialize GLFW\n" );
-//        getchar();
-//        return ;
-//    }
-
-//    // Configure GLFW
-//    glfwDefaultWindowHints(); // optional, the current window hints are already the default
-//    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-//    //glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
-//    glfwWindowHint(GLFW_SAMPLES, 4);
-//    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-//    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-//    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-//    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-
     setMouseTracking(true);
     QOpenGLWidget::initializeGL();
 
@@ -92,15 +83,15 @@ void SpaceView::initializeGL () {
 
     //canvasf
     glClearColor(0.0f, 0.0f, 0.0f,1.0f);
+    glEnable(GL_DEPTH_TEST);
 
     // Place light
     glEnable( GL_LIGHTING );
     glEnable( GL_LIGHT0 );
-    glEnable(GL_DEPTH_TEST);
 
     GLfloat light0_position [] = {0.2f, 1.0f, 0.3f, 0.0f};
-    GLfloat light_diffuse []={ 1.0, 1.0, 1.0, 1.0 };
-    GLfloat light_ambient []={ 1.0, 1.0, 1.0, 1.0 };
+    GLfloat light_diffuse []={ 1.01f, 1.01f, 1.01f, 1.0f };
+    GLfloat light_ambient []={ 1.01f, 1.01f, 1.01f, 1.0f };
     glLightfv ( GL_LIGHT0, GL_POSITION, light0_position );
     glLightfv ( GL_LIGHT0, GL_DIFFUSE, light_diffuse );
     glLightfv( GL_LIGHT0, GL_AMBIENT, light_ambient);
@@ -111,6 +102,11 @@ void SpaceView::initializeGL () {
 
     //Init models with textures & logic
     this->roomView = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
+    this->littleWall1 = new Cube(25,0,10, 26,10,30);
+
+    restartButton = new button(QVector4D{0.0,1.0,0.0,1.0}, 2, 1, 20);
+    giveUpButton = new button(QVector4D{1.0,0.0,0.0,1.0}, 2, 3, 20);
+
     this->shotgunView = new ShotgunView();
     this->barrels.append(new BarrelView(1, QVector3D(2, 7, 2)));        //small barrel (size 1) on top of big barrel begin view
     this->barrels.append(new BarrelView(2, QVector3D(2, 4, 2)));        //big barrel (size 2) under small barrel begin view
@@ -160,13 +156,21 @@ void SpaceView::resizeGL ( int width, int height ) {
 
 void SpaceView::updateScore()
 {
-    if (!gotAllBarrels()) {
+    if (!gotAllBarrels() && !gaveUp && BEGIN_SCORE - penalty > 0) {
         penalty += 1;
         if (penalty % 10 == 0) {
             scoreLabel->setText("current score: "+QString::number(BEGIN_SCORE-penalty));
             scoreLabel->adjustSize();
         }
-    } else {
+    } else if (gaveUp) {
+        scoreLabel->setText("FINAL SCORE: You gave up...");
+        scoreLabel->adjustSize();
+    } else if (BEGIN_SCORE - penalty <= 0) {
+        this->lose();
+        scoreLabel->setText("You lost the game.");
+        scoreLabel->adjustSize();
+    }
+    else {
         scoreLabel->setText("FINAL SCORE: "+QString::number(BEGIN_SCORE-penalty));
         scoreLabel->adjustSize();
     }
@@ -176,6 +180,7 @@ void SpaceView::paintGL () {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
+
 
     updateScore();
 
@@ -187,17 +192,30 @@ void SpaceView::paintGL () {
     // store current matrix
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix( );
+ /*----------------------------Trying to make headlight---------------------------------------*/
+//        glPushMatrix();
+//            glLoadIdentity();
+
+//            const GLfloat pos[] = { 0., 1., 0., 1. };
+//            GLfloat light_diffuse []={ 1.0, 1.0, 1.0, 1.0 };
+//            GLfloat light_ambient []={ 1.0, 1.0, 1.0, 1.0 };
+//            glLightfv( GL_LIGHT1, GL_POSITION, pos );
+//            glLightfv ( GL_LIGHT1, GL_DIFFUSE, light_diffuse );
+//            glLightfv( GL_LIGHT1, GL_AMBIENT, light_ambient);
+//            glEnable( GL_LIGHT1 );
+//        glPopMatrix();
+/*--------------------------------------------------------------------------------------------*/
         this->shotgunView->draw(isWireframe);
         this->cameraView->Draw();
         for (int i = 0; i < barrels.length(); ++i)
             barrels[i]->draw(isWireframe);
         this->roomView->draw(isWireframe);
+        this->littleWall1->draw(isWireframe);
         if (bulletView != nullptr)
             bulletView->draw(isWireframe);
 
-
-        InstanceGrass* grass = new InstanceGrass();
-        grass->draw();
+        restartButton->draw(isWireframe);
+        giveUpButton->draw(isWireframe);
 
     glPopMatrix( );
 }
@@ -209,10 +227,12 @@ void SpaceView::keyPressEvent(QKeyEvent * e) {
         this->restart();
 
     cameraView->keyPressEvent(e);
+    this->handlePicking(e);
 
 }
 
 void SpaceView::restart() {
+    gaveUp = false;
     penalty = 0;
     this->barrels.clear();
     this->barrels.append(new BarrelView(1, QVector3D(2, 7, 2)));        //small barrel (size 1) on top of big barrel begin view
@@ -241,6 +261,7 @@ void SpaceView::mouseMoveEvent(QMouseEvent *e) {
     cameraView->mouseMouveEvent(e);
 }
 
+/* https://stackoverflow.com/questions/8841422/glreadpixels-data-argument-usage */
 void SpaceView::mousePressEvent(QMouseEvent *e) {
     shotGunSound->play();
     this->bulletView = new BulletView(cameraView->getCameraLocation(), cameraView->getCameraLookingDirection());
@@ -254,6 +275,21 @@ void SpaceView::mousePressEvent(QMouseEvent *e) {
 
 }
 
+void SpaceView::handlePicking(QKeyEvent* e) {
+    unsigned char pixels[ 1 * 1 * 3 ] = { 0 };
+    glReadPixels(0, 0, 1, 1,GL_RGB, GL_UNSIGNED_BYTE, pixels);
+    GLubyte R = static_cast<int> (pixels[0]);
+    GLubyte G = static_cast<int> (pixels[1]);
+
+    if (G == 255 && e->key() == Qt::Key_T)
+        this->restart();
+    if (R == 255 &&  e->key() == Qt::Key_G) {
+        this->gaveUp = true;
+        this->lose();
+    }
+
+}
+
 bool SpaceView::gotAllBarrels() {
     for (int i = 0; i < barrels.length(); ++i) {
         if (!barrels[i]->getHitBox()->getHitByBullet())
@@ -263,6 +299,12 @@ bool SpaceView::gotAllBarrels() {
         winningSound->play();
     winningSoundPlayed = true;
     return true;
+}
+
+void SpaceView::lose() {
+    if (!losingSoundPlayed)
+        losingSound->play();
+    losingSoundPlayed = true;
 }
 
 
