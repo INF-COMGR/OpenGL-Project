@@ -204,7 +204,7 @@ void SpaceView::updateScore()
         scoreLabel->setText("You lost the game.");
         scoreLabel->adjustSize();
     }
-    else {
+    else if (gotAllBarrels() && !gaveUp) {
         scoreLabel->setText("FINAL SCORE: "+QString::number(BEGIN_SCORE-penalty));
         scoreLabel->adjustSize();
     }
@@ -319,7 +319,7 @@ bool SpaceView::gotAllBarrels() {
         if (!barrels[i]->getHitBox()->getHitByBullet())
             return false;
     }
-    if (!winningSoundPlayed)
+    if (!winningSoundPlayed && !gaveUp)
         winningSound->play();
     winningSoundPlayed = true;
     return true;
