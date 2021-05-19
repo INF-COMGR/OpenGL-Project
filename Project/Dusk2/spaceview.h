@@ -13,6 +13,7 @@ class BarrelView;
 class RoomView;
 class BulletView;
 class HitBox;
+class AnimationView;
 
 class SpaceView: public QOpenGLWidget {
 public:
@@ -31,6 +32,9 @@ private:
     ShotgunView* shotgunView;
     RoomView* roomView;
     BulletView* bulletView;
+    AnimationView* animationView;
+    AnimationView* animationView2;
+    AnimationView* animationView3;
     void keyPressEvent(QKeyEvent * e);
     void mouseMoveEvent(QMouseEvent* e);
     void mousePressEvent(QMouseEvent* e);

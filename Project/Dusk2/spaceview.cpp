@@ -8,6 +8,7 @@
 #include "bulletview.h"
 #include "hitbox.h"
 #include "instancegrass.h"
+#include "animationview.h"
 
 #include "QKeyEvent"
 #include <QApplication>
@@ -112,6 +113,10 @@ void SpaceView::initializeGL () {
     //Init models with textures & logic
     this->roomView = new RoomView(0,0,0,  50,20,50,  255.0f,192.0f,203.0f);
     this->shotgunView = new ShotgunView();
+    QVector<QVector2D> texCoords1 = QVector<QVector2D>{QVector2D(1, 1), QVector2D(0, 1), QVector2D(1, 0), QVector2D(2, 0)};
+    this->animationView = new AnimationView(2, QVector3D(10, 0, 3), "/88e20d896a9dd096579be10db88496f1-0/88e20d896a9dd096579be10db88496f1-", 53, texCoords1);
+    this->animationView2 = new AnimationView(4, QVector3D(15, 0, 3), "/1pX9-0/1pX9-", 46, texCoords1);
+
     this->barrels.append(new BarrelView(1, QVector3D(2, 7, 2)));        //small barrel (size 1) on top of big barrel begin view
     this->barrels.append(new BarrelView(2, QVector3D(2, 4, 2)));        //big barrel (size 2) under small barrel begin view
     this->barrels.append(new BarrelView(5, QVector3D(10, 10, 10)));     //giant barrel (size 5) to the side
@@ -195,7 +200,8 @@ void SpaceView::paintGL () {
         if (bulletView != nullptr)
             bulletView->draw(isWireframe);
 
-
+        animationView->draw(isWireframe);
+        animationView2->draw(isWireframe);
         InstanceGrass* grass = new InstanceGrass();
         grass->draw();
 
